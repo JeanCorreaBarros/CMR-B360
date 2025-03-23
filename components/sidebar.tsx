@@ -120,7 +120,7 @@ export function Sidebar() {
 function SidebarIcon({ icon, active = false }: { icon: ReactNode; active?: boolean }) {
   return (
     <button
-      className={`w-10 h-10 rounded-full flex items-center justify-center ${active ? "bg-black text-white" : "text-gray-500 hover:bg-gray-100"}`}
+      className={`w-10 h-10 rounded-full flex items-center justify-center ${active ? "bg-purple-500 text-white" : "text-gray-500 hover:bg-gray-100"}`}
     >
       {icon}
     </button>
@@ -129,17 +129,8 @@ function SidebarIcon({ icon, active = false }: { icon: ReactNode; active?: boole
 
 function Logo() {
   return (
-    <div className="w-10 h-10 rounded-full bg-black flex items-center justify-center text-white">
-      <svg viewBox="0 0 24 24" fill="none" className="w-6 h-6" stroke="currentColor">
-        <path
-          d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
-          fill="currentColor"
-        />
-        <path
-          d="M12 6c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm0 10c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4z"
-          fill="currentColor"
-        />
-      </svg>
+    <div className="text-lg font-bold text-purple-700 mb-8">
+      B360
     </div>
   )
 }

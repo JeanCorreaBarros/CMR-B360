@@ -39,7 +39,7 @@ export function Header() {
   return (
     <header className="bg-white border-b py-4 px-6 relative">
       <div className="flex flex-col items-center justify-center">
-        <Link href="/" className="text-xl font-semibold mb-4">
+        <Link href="/" className="text-2xl font-bold text-purple-700 mb-8">
           B360
         </Link>
         <nav className="flex flex-wrap items-center justify-center gap-2">
@@ -125,7 +125,7 @@ function NavItem({
     <Link
       href={path}
       className={`px-3 py-1 rounded-full text-sm flex items-center gap-1 ${
-        active ? "bg-black text-white" : "text-gray-600 hover:bg-gray-100"
+        active ? "bg-purple-500 text-white shadow-xl" : "text-gray-600 hover:bg-gray-100"
       }`}
     >
       {icon}
