@@ -18,7 +18,7 @@ export default function ConfiguracionPage() {
                 { name: "Seguridad", icon: <ShieldIcon /> },
                 { name: "Facturación", icon: <CreditCardIcon /> },
                 { name: "Integraciones", icon: <LinkIcon /> },
-                { name: "Apariencia", icon: <PaletteIcon /> },
+                { name: "Apariencia WebPage", icon: <PaletteIcon /> },
               ].map((item) => (
                 <a
                   key={item.name}
