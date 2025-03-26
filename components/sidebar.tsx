@@ -23,7 +23,7 @@ export function Sidebar() {
       { icon: <ClockIcon />, path: "/agenda/pendientes" },
       { icon: <CheckCircleIcon />, path: "/agenda/completadas" },
       { icon: <UserPlusIcon />, path: "/agenda/nuevo-cliente" },
-      { icon: <SettingsIcon />, path: "/configuracion" },
+      { icon: <SettingsIcon />, path: "/agenda/configuracion" },
     ],
     configuracion: [
       { icon: <HomeIcon />, path: "/" },
@@ -39,7 +39,7 @@ export function Sidebar() {
       { icon: <DollarSignIcon />, path: "/facturacion/pagos" },
       { icon: <FileTextIcon />, path: "/facturacion/facturas" },
       { icon: <TrendingUpIcon />, path: "/facturacion/reportes" },
-      { icon: <SettingsIcon />, path: "/configuracion" },
+      { icon: <SettingsIcon />, path: "/facturacion/configuracion" },
     ],
     inventarios: [
       { icon: <HomeIcon />, path: "/" },
@@ -47,7 +47,7 @@ export function Sidebar() {
       { icon: <ShoppingCartIcon />, path: "/inventarios/compras" },
       { icon: <TruckIcon />, path: "/inventarios/proveedores" },
       { icon: <AlertCircleIcon />, path: "/inventarios/alertas" },
-      { icon: <SettingsIcon />, path: "/configuracion" },
+      { icon: <SettingsIcon />, path: "/inventarios/configuracion" },
     ],
     reportes: [
       { icon: <HomeIcon />, path: "/" },
@@ -55,7 +55,7 @@ export function Sidebar() {
       { icon: <PieChartIcon />, path: "/reportes/ventas" },
       { icon: <TrendingUpIcon />, path: "/reportes/tendencias" },
       { icon: <UsersIcon />, path: "/reportes/clientes" },
-      { icon: <SettingsIcon />, path: "/configuracion" },
+      { icon: <SettingsIcon />, path: "/reportes/configuracion" },
     ],
     contabilidad: [
       { icon: <HomeIcon />, path: "/" },
@@ -63,7 +63,7 @@ export function Sidebar() {
       { icon: <TrendingUpIcon />, path: "/contabilidad/ingresos" },
       { icon: <TrendingDownIcon />, path: "/contabilidad/gastos" },
       { icon: <FileTextIcon />, path: "/contabilidad/impuestos" },
-      { icon: <SettingsIcon />, path: "/configuracion" },
+      { icon: <SettingsIcon />, path: "/contabilidad/configuracion" },
     ],
     nomina: [
       { icon: <HomeIcon />, path: "/" },
@@ -71,7 +71,7 @@ export function Sidebar() {
       { icon: <DollarSignIcon />, path: "/nomina/pagos" },
       { icon: <ClockIcon />, path: "/nomina/asistencia" },
       { icon: <AwardIcon />, path: "/nomina/bonificaciones" },
-      { icon: <SettingsIcon />, path: "/configuracion" },
+      { icon: <SettingsIcon />, path: "/nomina/configuracion" },
     ],
     marketing: [
       { icon: <HomeIcon />, path: "/" },
@@ -79,7 +79,7 @@ export function Sidebar() {
       { icon: <MessageSquareIcon />, path: "/marketing/campanas" },
       { icon: <GiftIcon />, path: "/marketing/promociones" },
       { icon: <StarIcon />, path: "/marketing/fidelizacion" },
-      { icon: <SettingsIcon />, path: "/configuracion" },
+      { icon: <SettingsIcon />, path: "/marketing/configuracion" },
     ],
     seguridad: [
       { icon: <HomeIcon />, path: "/" },
@@ -87,7 +87,7 @@ export function Sidebar() {
       { icon: <UsersIcon />, path: "/seguridad/usuarios" },
       { icon: <KeyIcon />, path: "/seguridad/permisos" },
       { icon: <ActivityIcon />, path: "/seguridad/auditoria" },
-      { icon: <SettingsIcon />, path: "/configuracion" },
+      { icon: <SettingsIcon />, path: "/seguridad/configuracion" },
     ],
     login: [
       { icon: <HomeIcon />, path: "/" },

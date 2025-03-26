@@ -9,9 +9,9 @@ import { AppProvider } from "@/components/app-context"
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: "B360 Dashboard",
-  description: "B360 Dashboard Application",
-    generator: 'v0.dev'
+  title: "B360 CMR Dashboard",
+  description: "B360 CMR Dashboard",
+    generator: 'Strap Digital Hub'
 }
 
 export default function RootLayout({

@@ -24,7 +24,7 @@ export function Header() {
   } = useAppContext()
 
   const modules = [
-    { label: "Inicio de Sesión", icon: <LockIcon />, path: "/login" },
+    /*{ label: "Inicio de Sesión", icon: <LockIcon />, path: "/login" },*/
     { label: "Agenda y Citas", icon: <CalendarIcon />, path: "/agenda" },
     { label: "Configuración", icon: <SettingsIcon />, path: "/configuracion" },
     { label: "Facturación", icon: <CreditCardIcon />, path: "/facturacion" },
