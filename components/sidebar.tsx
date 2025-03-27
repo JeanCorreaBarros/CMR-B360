@@ -36,8 +36,10 @@ export function Sidebar() {
     facturacion: [
       { icon: <HomeIcon />, path: "/" },
       { icon: <CreditCardIcon />, path: "/facturacion", active: true },
-      { icon: <DollarSignIcon />, path: "/facturacion/pagos" },
       { icon: <FileTextIcon />, path: "/facturacion/facturas" },
+      { icon: <FileIcon />, path: "/facturacion/cotizaciones" },
+      { icon: <RefreshCcwIcon />, path: "/facturacion/notas-credito" },
+      { icon: <DollarSignIcon />, path: "/facturacion/pagos" },
       { icon: <TrendingUpIcon />, path: "/facturacion/reportes" },
       { icon: <SettingsIcon />, path: "/facturacion/configuracion" },
     ],
@@ -717,6 +719,46 @@ function LockIcon() {
     >
       <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
       <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+    </svg>
+  )
+}
+
+function FileIcon() {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="18"
+      height="18"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path>
+      <polyline points="13 2 13 9 20 9"></polyline>
+    </svg>
+  )
+}
+
+function RefreshCcwIcon() {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="18"
+      height="18"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
+      <path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"></path>
+      <polyline points="21 16 16 16 21 11"></polyline>
+      <polyline points="3 8 8 8 3 13"></polyline>
     </svg>
   )
 }
