@@ -162,123 +162,128 @@ export default function NotasCreditoPage() {
 
   return (
     <div className="flex min-h-screen bg-gray-50">
-      <motion.main
-        className="flex-1 overflow-y-auto p-6"
-        initial="hidden"
-        animate="visible"
-        variants={containerVariants}
-      >
-        <motion.div className="flex items-center justify-between mb-6" variants={itemVariants}>
-          <h1 className="text-2xl font-bold">Notas de Crédito</h1>
-          <Button
-            onClick={() => router.push("/facturacion/nueva-nota-credito")}
-            className="bg-black hover:bg-gray-800 text-white"
-          >
-            <PlusIcon className="mr-2 h-4 w-4" />
-            Nueva Nota de Crédito
-          </Button>
-        </motion.div>
+      <Sidebar />
+      <div className="flex flex-col flex-1 overflow-hidden">
+        <Header />
+        <motion.main
+          className="flex-1 overflow-y-auto p-9"
+          initial="hidden"
+          animate="visible"
+          variants={containerVariants}
+        >
+          <motion.div className="flex items-center justify-between mb-6" variants={itemVariants}>
+            <h1 className="text-2xl font-bold">Notas de Crédito</h1>
+            <Button
+              onClick={() => router.push("/facturacion/nueva-nota-credito")}
+              className="bg-black hover:bg-gray-800 text-white"
+            >
+              <PlusIcon className="mr-2 h-4 w-4" />
+              Nueva Nota de Crédito
+            </Button>
+          </motion.div>
 
-        <motion.div className="bg-white rounded-xl p-6 shadow-sm mb-6" variants={itemVariants}>
-          <div className="flex justify-between items-center mb-4">
-            <h2 className="font-medium">Historial de Notas de Crédito</h2>
-            <div className="flex gap-2">
-              <div className="relative">
-                <input
-                  type="text"
-                  placeholder="Buscar nota de crédito..."
-                  className="pl-8 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-black"
-                />
-                <SearchIcon className="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+          <motion.div className="bg-white rounded-xl p-6 shadow-sm mb-6" variants={itemVariants}>
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="font-medium">Historial de Notas de Crédito</h2>
+              <div className="flex gap-2">
+                <div className="relative">
+                  <input
+                    type="text"
+                    placeholder="Buscar nota de crédito..."
+                    className="pl-8 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-black"
+                  />
+                  <SearchIcon className="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                </div>
+                <select className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-black">
+                  <option>Todos los motivos</option>
+                  <option>Devolución parcial</option>
+                  <option>Descuento post-venta</option>
+                  <option>Anulación de factura</option>
+                  <option>Corrección de precio</option>
+                </select>
               </div>
-              <select className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-black">
-                <option>Todos los motivos</option>
-                <option>Devolución parcial</option>
-                <option>Descuento post-venta</option>
-                <option>Anulación de factura</option>
-                <option>Corrección de precio</option>
-              </select>
             </div>
-          </div>
 
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead>
-                <tr className="text-left text-sm text-gray-500 border-b">
-                  <th className="pb-3 font-medium">Nº Nota</th>
-                  <th className="pb-3 font-medium">Factura</th>
-                  <th className="pb-3 font-medium">Cliente</th>
-                  <th className="pb-3 font-medium">Fecha</th>
-                  <th className="pb-3 font-medium">Monto</th>
-                  <th className="pb-3 font-medium">Motivo</th>
-                  <th className="pb-3 font-medium">Acciones</th>
-                </tr>
-              </thead>
-              <tbody>
-                {currentItems.map((notaCredito) => (
-                  <motion.tr
-                    key={notaCredito.id}
-                    className="border-b hover:bg-gray-50"
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.3 }}
-                  >
-                    <td className="py-3">{notaCredito.id}</td>
-                    <td className="py-3">{notaCredito.factura}</td>
-                    <td className="py-3">{notaCredito.cliente}</td>
-                    <td className="py-3">{notaCredito.fecha}</td>
-                    <td className="py-3">{notaCredito.monto}</td>
-                    <td className="py-3">{notaCredito.motivo}</td>
-                    <td className="py-3">
-                      <div className="flex gap-2">
-                        <VisualizarNotaCreditoModal notaCredito={notaCredito} />
-                        <button className="p-1 text-gray-500 hover:text-gray-700">
-                          <DownloadIcon className="w-4 h-4" />
-                        </button>
-                      </div>
-                    </td>
-                  </motion.tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-
-          <div className="flex justify-between items-center mt-4">
-            <div className="text-sm text-gray-500">
-              Mostrando {indexOfFirstItem + 1} a {Math.min(indexOfLastItem, notasCredito.length)} de{" "}
-              {notasCredito.length} notas de crédito
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead>
+                  <tr className="text-left text-sm text-gray-500 border-b">
+                    <th className="pb-3 font-medium">Nº Nota</th>
+                    <th className="pb-3 font-medium">Factura</th>
+                    <th className="pb-3 font-medium">Cliente</th>
+                    <th className="pb-3 font-medium">Fecha</th>
+                    <th className="pb-3 font-medium">Monto</th>
+                    <th className="pb-3 font-medium">Motivo</th>
+                    <th className="pb-3 font-medium">Acciones</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {currentItems.map((notaCredito) => (
+                    <motion.tr
+                      key={notaCredito.id}
+                      className="border-b hover:bg-gray-50"
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.3 }}
+                    >
+                      <td className="py-3">{notaCredito.id}</td>
+                      <td className="py-3">{notaCredito.factura}</td>
+                      <td className="py-3">{notaCredito.cliente}</td>
+                      <td className="py-3">{notaCredito.fecha}</td>
+                      <td className="py-3">{notaCredito.monto}</td>
+                      <td className="py-3">{notaCredito.motivo}</td>
+                      <td className="py-3">
+                        <div className="flex gap-2">
+                          <VisualizarNotaCreditoModal notaCredito={notaCredito} />
+                          <button className="p-1 text-gray-500 hover:text-gray-700">
+                            <DownloadIcon className="w-4 h-4" />
+                          </button>
+                        </div>
+                      </td>
+                    </motion.tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
-            <div className="flex gap-2">
-              <button
-                className={`px-3 py-1 border border-gray-300 rounded-md ${currentPage === 1 ? "opacity-50 cursor-not-allowed" : "hover:bg-gray-50"}`}
-                onClick={() => currentPage > 1 && paginate(currentPage - 1)}
-                disabled={currentPage === 1}
-              >
-                <ChevronLeftIcon className="h-4 w-4" />
-              </button>
 
-              {Array.from({ length: totalPages }, (_, i) => (
+            <div className="flex justify-between items-center mt-4">
+              <div className="text-sm text-gray-500">
+                Mostrando {indexOfFirstItem + 1} a {Math.min(indexOfLastItem, notasCredito.length)} de{" "}
+                {notasCredito.length} notas de crédito
+              </div>
+              <div className="flex gap-2">
                 <button
-                  key={i + 1}
-                  onClick={() => paginate(i + 1)}
-                  className={`px-3 py-1 ${currentPage === i + 1 ? "bg-black text-white" : "border border-gray-300 hover:bg-gray-50"
-                    } rounded-md`}
+                  className={`px-3 py-1 border border-gray-300 rounded-md ${currentPage === 1 ? "opacity-50 cursor-not-allowed" : "hover:bg-gray-50"}`}
+                  onClick={() => currentPage > 1 && paginate(currentPage - 1)}
+                  disabled={currentPage === 1}
                 >
-                  {i + 1}
+                  <ChevronLeftIcon className="h-4 w-4" />
                 </button>
-              ))}
 
-              <button
-                className={`px-3 py-1 border border-gray-300 rounded-md ${currentPage === totalPages ? "opacity-50 cursor-not-allowed" : "hover:bg-gray-50"}`}
-                onClick={() => currentPage < totalPages && paginate(currentPage + 1)}
-                disabled={currentPage === totalPages}
-              >
-                <ChevronRightIcon className="h-4 w-4" />
-              </button>
+                {Array.from({ length: totalPages }, (_, i) => (
+                  <button
+                    key={i + 1}
+                    onClick={() => paginate(i + 1)}
+                    className={`px-3 py-1 ${currentPage === i + 1 ? "bg-black text-white" : "border border-gray-300 hover:bg-gray-50"
+                      } rounded-md`}
+                  >
+                    {i + 1}
+                  </button>
+                ))}
+
+                <button
+                  className={`px-3 py-1 border border-gray-300 rounded-md ${currentPage === totalPages ? "opacity-50 cursor-not-allowed" : "hover:bg-gray-50"}`}
+                  onClick={() => currentPage < totalPages && paginate(currentPage + 1)}
+                  disabled={currentPage === totalPages}
+                >
+                  <ChevronRightIcon className="h-4 w-4" />
+                </button>
+              </div>
             </div>
-          </div>
-        </motion.div>
-      </motion.main>
+          </motion.div>
+        </motion.main>
+      </div>
+
     </div>
   )
 }

@@ -33,7 +33,7 @@ export function Header() {
     { label: "Contabilidad", icon: <DollarSignIcon />, path: "/contabilidad" },
     { label: "Nómina", icon: <UsersIcon />, path: "/nomina" },
     { label: "Marketing", icon: <TrendingUpIcon />, path: "/marketing" },
-    { label: "Seguridad", icon: <ShieldIcon />, path: "/seguridad" },
+    /*{ label: "Seguridad", icon: <ShieldIcon />, path: "/seguridad" },*/
   ]
 
   return (

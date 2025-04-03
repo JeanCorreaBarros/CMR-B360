@@ -1,13 +1,56 @@
+"use client"
+
+import type React from "react"
+
+import { useState } from "react"
+import { useAuth } from "@/components/auth-context"
+
 export default function LoginPage() {
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
+  const [error, setError] = useState("")
+  const [rememberMe, setRememberMe] = useState(false)
+  const { login, isLoading } = useAuth()
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setError("")
+
+    if (!email || !password) {
+      setError("Por favor ingrese su correo y contraseña")
+      return
+    }
+
+    const success = await login(email, password)
+
+    if (!success) {
+      setError("Credenciales incorrectas. Intente nuevamente.")
+    }
+  }
+
   return (
-    <div className="flex items-center justify-center min-h-[calc(100vh-12rem)]">
+    <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <div className="bg-white rounded-xl shadow-lg p-8 w-full max-w-md">
         <div className="text-center mb-6">
+          <div className="w-16 h-16 rounded-full bg-black flex items-center justify-center text-white mx-auto mb-4">
+            <svg viewBox="0 0 24 24" fill="none" className="w-8 h-8" stroke="currentColor">
+              <path
+                d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
+                fill="currentColor"
+              />
+              <path
+                d="M12 6c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm0 10c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4z"
+                fill="currentColor"
+              />
+            </svg>
+          </div>
           <h1 className="text-2xl font-bold">Iniciar Sesión</h1>
           <p className="text-gray-500 mt-2">Accede a tu cuenta de B360</p>
         </div>
 
-        <form className="space-y-4">
+        {error && <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">{error}</div>}
+
+        <form className="space-y-4" onSubmit={handleSubmit}>
           <div>
             <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
               Correo Electrónico
@@ -17,6 +60,9 @@ export default function LoginPage() {
               id="email"
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-black"
               placeholder="tu@email.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              disabled={isLoading}
             />
           </div>
 
@@ -29,6 +75,9 @@ export default function LoginPage() {
               id="password"
               className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-black"
               placeholder="••••••••"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              disabled={isLoading}
             />
           </div>
 
@@ -38,6 +87,9 @@ export default function LoginPage() {
                 id="remember"
                 type="checkbox"
                 className="h-4 w-4 text-black focus:ring-black border-gray-300 rounded"
+                checked={rememberMe}
+                onChange={(e) => setRememberMe(e.target.checked)}
+                disabled={isLoading}
               />
               <label htmlFor="remember" className="ml-2 block text-sm text-gray-700">
                 Recordarme
@@ -52,8 +104,9 @@ export default function LoginPage() {
           <button
             type="submit"
             className="w-full py-2 px-4 bg-black text-white rounded-md hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
+            disabled={isLoading}
           >
-            Iniciar Sesión
+            {isLoading ? "Iniciando sesión..." : "Iniciar Sesión"}
           </button>
         </form>
 
@@ -71,18 +124,21 @@ export default function LoginPage() {
             <button
               type="button"
               className="w-full py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50"
+              disabled={isLoading}
             >
               <GoogleIcon />
             </button>
             <button
               type="button"
               className="w-full py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50"
+              disabled={isLoading}
             >
               <FacebookIcon />
             </button>
             <button
               type="button"
               className="w-full py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50"
+              disabled={isLoading}
             >
               <AppleIcon />
             </button>

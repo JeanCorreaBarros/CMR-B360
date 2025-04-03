@@ -1,271 +1,151 @@
+"use client"
+
+import { useState } from "react"
+import { useToast } from "@/components/ui/use-toast"
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog"
+import { Button } from "@/components/ui/button"
+import { Checkbox } from "@/components/ui/checkbox"
+import { Label } from "@/components/ui/label"
+import { Calendar, CheckCircle, Clock, MessageCircle, CalendarCheck, BellRing } from "lucide-react"
+
+// Define los accesos rápidos disponibles
+const availableShortcuts = [
+  { id: "asignar-cita", label: "Asignar Cita al Cliente", icon: CalendarCheck, completed: true },
+  { id: "identificar-servicio", label: "Identificar Tipo de Servicio", icon: CheckCircle, completed: true },
+  { id: "preparar-materiales", label: "Preparar Materiales", icon: CheckCircle, completed: false },
+  { id: "procesar-pago", label: "Procesar Pago", icon: CheckCircle, completed: false },
+  { id: "confirmar-recepcion", label: "Confirmar Recepción de Cita", icon: CheckCircle, completed: true },
+  { id: "identificar-duracion", label: "Identificar Duración", icon: Clock, completed: true },
+  { id: "realizar-servicio", label: "Realizar Servicio", icon: CheckCircle, completed: false },
+  { id: "verificar-satisfaccion", label: "Verificar Satisfacción", icon: CheckCircle, completed: false },
+  { id: "comunicacion-cliente", label: "Comunicación con Cliente", icon: MessageCircle, completed: false },
+  { id: "agendar-proxima", label: "Agendar Próxima Cita", icon: Calendar, completed: false },
+  { id: "notificacion-promociones", label: "Notificación de Promociones", icon: BellRing, completed: false },
+]
+
 export function CustomerJourney() {
+  const [selectedShortcuts, setSelectedShortcuts] = useState([
+    "asignar-cita",
+    "identificar-servicio",
+    "preparar-materiales",
+    "procesar-pago",
+    "confirmar-recepcion",
+    "identificar-duracion",
+    "realizar-servicio",
+    "verificar-satisfaccion",
+  ])
+  const [isConfigOpen, setIsConfigOpen] = useState(false)
+  const { toast } = useToast()
+
+  const handleShortcutAction = (id: string) => {
+    toast({
+      title: "Acción ejecutada",
+      description: `Has seleccionado: ${availableShortcuts.find((s) => s.id === id)?.label}`,
+    })
+  }
+
+  const handleShortcutChange = (id: string, checked: boolean) => {
+    if (checked) {
+      if (selectedShortcuts.length >= 8) {
+        toast({
+          title: "Límite alcanzado",
+          description: "Solo puedes seleccionar 8 accesos directos",
+          variant: "destructive",
+        })
+        return
+      }
+      setSelectedShortcuts([...selectedShortcuts, id])
+    } else {
+      setSelectedShortcuts(selectedShortcuts.filter((shortcut) => shortcut !== id))
+    }
+  }
+
   return (
-    <div className="grid grid-cols-4 gap-6">
-      <JourneyColumn
-        title="Asignación de Cita"
-        items={[
-          {
-            avatar: "/placeholder.svg?height=40&width=40",
-            title: "Asignar Cita al Cliente",
-            hasCheckmark: true,
-            hasCalendar: true,
-          },
-          {
-            avatar: "/placeholder.svg?height=40&width=40",
-            title: "Confirmar Recepción de Cita",
-            hasCheckmark: true,
-            hasCalendar: true,
-          },
-        ]}
-      />
+    <>
+      <div className="grid grid-cols-4 gap-4">
+        {selectedShortcuts.map((id) => {
+          const shortcut = availableShortcuts.find((s) => s.id === id)
+          if (!shortcut) return null
 
-      <JourneyColumn
-        title="Identificación de Servicio"
-        items={[
-          {
-            avatar: "/placeholder.svg?height=40&width=40",
-            title: "Identificar Tipo de Servicio",
-            hasCheckmark: true,
-            hasCalendar: true,
-          },
-          {
-            avatar: "/placeholder.svg?height=40&width=40",
-            title: "Identificar Duración",
-            hasCheckmark: true,
-            hasCalendar: true,
-          },
-          {
-            avatar: "/placeholder.svg?height=40&width=40",
-            title: "Identificar Productos",
-            hasCheckmark: true,
-            hasCalendar: true,
-          },
-          {
-            avatar: "/placeholder.svg?height=40&width=40",
-            title: "Asignar al Estilista",
-            hasCheckmark: false,
-            hasCalendar: false,
-            hasMenu: true,
-          },
-          {
-            avatar: "/placeholder.svg?height=40&width=40",
-            title: "Informar Precio al Cliente",
-            hasCheckmark: false,
-            hasCalendar: false,
-            hasMenu: true,
-          },
-        ]}
-      />
+          const Icon = shortcut.icon
 
-      <JourneyColumn
-        title="Ejecución del Servicio"
-        items={[
-          {
-            avatar: "/placeholder.svg?height=40&width=40",
-            title: "Preparar Materiales",
-            hasCheckmark: false,
-            hasCalendar: false,
-            hasPlus: true,
-          },
-          {
-            avatar: "/placeholder.svg?height=40&width=40",
-            title: "Realizar Servicio",
-            hasCheckmark: false,
-            hasCalendar: false,
-            hasPlus: true,
-          },
-          {
-            avatar: "/placeholder.svg?height=40&width=40",
-            title: "Estimar Tiempo Restante",
-            hasCheckmark: false,
-            hasCalendar: false,
-            hasMenu: true,
-          },
-          {
-            avatar: "/placeholder.svg?height=40&width=40",
-            title: "Informar Finalización",
-            hasCheckmark: false,
-            hasCalendar: false,
-            hasMenu: true,
-          },
-          {
-            title: "Registrar Productos Usados",
-            hasCheckmark: false,
-            hasCalendar: false,
-            hasPlus: true,
-          },
-        ]}
-      />
+          return (
+            <div
+              key={id}
+              className={`relative bg-gray-50 rounded-lg p-4 flex flex-col h-[120px] cursor-pointer hover:bg-gray-100 transition-colors`}
+              onClick={() => handleShortcutAction(id)}
+            >
+              <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center mb-2">
+                <Icon className="w-4 h-4 text-gray-600" />
+              </div>
+              <h3 className="text-sm font-medium">{shortcut.label}</h3>
 
-      <JourneyColumn
-        title="Finalización"
-        items={[
-          {
-            title: "Procesar Pago",
-            darkBg: true,
-          },
-          {
-            title: "Verificar Satisfacción",
-          },
-          {
-            title: "Comunicación con Cliente",
-          },
-          {
-            title: "Agendar Próxima Cita",
-          },
-          {
-            title: "Notificación de Promociones",
-          },
-          {
-            title: "Encuesta de Satisfacción",
-          },
-        ]}
-      />
-    </div>
-  )
-}
-
-interface JourneyItem {
-  avatar?: string
-  title: string
-  hasCheckmark?: boolean
-  hasCalendar?: boolean
-  hasMenu?: boolean
-  hasPlus?: boolean
-  darkBg?: boolean
-}
-
-function JourneyColumn({ title, items }: { title: string; items: JourneyItem[] }) {
-  return (
-    <div>
-      <div className="flex flex-col space-y-4">
-        {items.map((item, index) => (
-          <JourneyCard key={index} item={item} />
-        ))}
+              <div className="absolute bottom-4 right-4 flex space-x-2">
+                {shortcut.completed && (
+                  <span className="w-6 h-6 flex items-center justify-center">
+                    <CheckCircle className="w-5 h-5 text-green-500" />
+                  </span>
+                )}
+                <span className="w-6 h-6 flex items-center justify-center">
+                  <Calendar className="w-5 h-5 text-gray-400" />
+                </span>
+              </div>
+            </div>
+          )
+        })}
       </div>
-      <div className="mt-4 text-sm font-medium text-gray-700">{title}</div>
-    </div>
-  )
-}
 
-function JourneyCard({ item }: { item: JourneyItem }) {
-  return (
-    <div className={`p-4 rounded-xl ${item.darkBg ? "bg-black text-white" : "bg-gray-100"} shadow-sm`}>
-      {item.avatar && (
-        <div className="flex items-center mb-2">
-          <div className="w-8 h-8 rounded-full overflow-hidden mr-2">
-            <img src={item.avatar || "/placeholder.svg"} alt="User" className="w-full h-full object-cover" />
-          </div>
-        </div>
+      
+
+      {isConfigOpen && (
+        <Dialog open={isConfigOpen} onOpenChange={setIsConfigOpen}>
+          <DialogContent className="max-w-3xl max-h-[80vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle>Configurar accesos rápidos</DialogTitle>
+            </DialogHeader>
+
+            <div className="mt-4">
+              <p className="text-sm text-gray-500 mb-4">
+                Selecciona hasta 8 accesos rápidos para mostrar en tu panel.
+                <span className="font-medium"> Seleccionados: {selectedShortcuts.length}/8</span>
+              </p>
+
+              <div className="grid grid-cols-2 gap-3">
+                {availableShortcuts.map((shortcut) => (
+                  <div key={shortcut.id} className="flex items-center space-x-2">
+                    <Checkbox
+                      id={shortcut.id}
+                      checked={selectedShortcuts.includes(shortcut.id)}
+                      onCheckedChange={(checked) => handleShortcutChange(shortcut.id, checked as boolean)}
+                    />
+                    <Label htmlFor={shortcut.id} className="cursor-pointer">
+                      {shortcut.label}
+                    </Label>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <DialogFooter>
+              <Button variant="outline" onClick={() => setIsConfigOpen(false)}>
+                Cancelar
+              </Button>
+              <Button
+                onClick={() => {
+                  toast({
+                    title: "Configuración guardada",
+                    description: "Los accesos rápidos han sido actualizados",
+                  })
+                  setIsConfigOpen(false)
+                }}
+              >
+                Guardar configuración
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       )}
-      <div className="text-sm">{item.title}</div>
-
-      {(item.hasCheckmark || item.hasCalendar || item.hasMenu || item.hasPlus) && (
-        <div className="flex justify-end mt-2">
-          {item.hasCheckmark && (
-            <button className="w-6 h-6 rounded-full bg-white flex items-center justify-center mr-2">
-              <CheckIcon />
-            </button>
-          )}
-
-          {item.hasCalendar && (
-            <button className="w-6 h-6 rounded-full bg-white flex items-center justify-center">
-              <CalendarIcon />
-            </button>
-          )}
-
-          {item.hasMenu && (
-            <button className="w-6 h-6 rounded-full bg-white flex items-center justify-center">
-              <MenuIcon />
-            </button>
-          )}
-
-          {item.hasPlus && (
-            <button className="w-6 h-6 rounded-full bg-white flex items-center justify-center">
-              <PlusIcon />
-            </button>
-          )}
-        </div>
-      )}
-    </div>
-  )
-}
-
-function CheckIcon() {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="14"
-      height="14"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <polyline points="20 6 9 17 4 12" />
-    </svg>
-  )
-}
-
-function CalendarIcon() {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="14"
-      height="14"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
-      <line x1="16" y1="2" x2="16" y2="6" />
-      <line x1="8" y1="2" x2="8" y2="6" />
-      <line x1="3" y1="10" x2="21" y2="10" />
-    </svg>
-  )
-}
-
-function MenuIcon() {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="14"
-      height="14"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <circle cx="12" cy="12" r="1" />
-      <circle cx="12" cy="5" r="1" />
-      <circle cx="12" cy="19" r="1" />
-    </svg>
-  )
-}
-
-function PlusIcon() {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="14"
-      height="14"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <line x1="12" y1="5" x2="12" y2="19" />
-      <line x1="5" y1="12" x2="19" y2="12" />
-    </svg>
+    </>
   )
 }
 

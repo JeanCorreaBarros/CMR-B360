@@ -1,397 +1,439 @@
+"use client"
+import { Button } from "@/components/ui/button"
+import { Sidebar } from "@/components/sidebar"
+import { Header } from "@/components/header"
+import { Input } from "@/components/ui/input"
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Search, Filter, Plus, MoreHorizontal, Edit, Trash2, Eye } from "lucide-react"
+import Link from "next/link"
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
+import { Label } from "@/components/ui/label"
+import { useState } from "react"
+
+// Datos de ejemplo para productos
+const productosData = [
+  {
+    id: 1,
+    codigo: "PROD001",
+    nombre: "Laptop HP Pavilion",
+    categoria: "Electrónicos",
+    stock: 15,
+    precio: 899.99,
+    estado: "Activo",
+  },
+  {
+    id: 2,
+    codigo: "PROD002",
+    nombre: 'Monitor Dell 27"',
+    categoria: "Periféricos",
+    stock: 23,
+    precio: 249.99,
+    estado: "Activo",
+  },
+  {
+    id: 3,
+    codigo: "PROD003",
+    nombre: "Teclado Mecánico Logitech",
+    categoria: "Periféricos",
+    stock: 42,
+    precio: 129.99,
+    estado: "Activo",
+  },
+  {
+    id: 4,
+    codigo: "PROD004",
+    nombre: "Mouse Inalámbrico",
+    categoria: "Periféricos",
+    stock: 67,
+    precio: 39.99,
+    estado: "Activo",
+  },
+  {
+    id: 5,
+    codigo: "PROD005",
+    nombre: "Impresora Multifuncional",
+    categoria: "Oficina",
+    stock: 8,
+    precio: 349.99,
+    estado: "Inactivo",
+  },
+]
+
 export default function InventariosPage() {
+  const [currentPage, setCurrentPage] = useState(1)
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
+  const [isViewDialogOpen, setIsViewDialogOpen] = useState(false)
+  const [selectedProduct, setSelectedProduct] = useState<any>(null)
+  const itemsPerPage = 5
+
+  // Calcular productos para la página actual
+  const indexOfLastItem = currentPage * itemsPerPage
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage
+  const currentItems = productosData.slice(indexOfFirstItem, indexOfLastItem)
+  const totalPages = Math.ceil(productosData.length / itemsPerPage)
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page)
+  }
+
+  const handleViewProduct = (product: any) => {
+    setSelectedProduct(product)
+    setIsViewDialogOpen(true)
+  }
+
+  const handleDeleteProduct = (product: any) => {
+    setSelectedProduct(product)
+    setIsDeleteDialogOpen(true)
+  }
+
   return (
-    <>
-      <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold">Inventarios</h1>
-        <button className="px-4 py-2 bg-black text-white rounded-lg hover:bg-gray-800 flex items-center gap-2">
-          <PlusIcon />
-          Nuevo Producto
-        </button>
+
+    <div className="flex h-screen bg-gray-50">
+      <Sidebar />
+      <div className="flex flex-col flex-1 overflow-hidden">
+        <Header />
+        <div className="p-6 space-y-6">
+      <div className="flex justify-between items-center">
+        <h1 className="text-2xl font-bold">Inventario</h1>
+        <Link href="/inventarios/nuevo-producto">
+          <Button className="flex items-center gap-1">
+            <Plus className="h-4 w-4" />
+            Nuevo Producto
+          </Button>
+        </Link>
       </div>
 
-      <div className="grid grid-cols-4 gap-6 mb-6">
-        <div className="bg-white rounded-xl p-6 shadow-sm">
-          <div className="text-sm text-gray-500 mb-1">Total Productos</div>
-          <div className="text-2xl font-bold">248</div>
-          <div className="flex items-center mt-2 text-sm text-blue-600">
-            <BoxIcon className="w-4 h-4 mr-1" />
-            <span>12 categorías</span>
-          </div>
-        </div>
-        <div className="bg-white rounded-xl p-6 shadow-sm">
-          <div className="text-sm text-gray-500 mb-1">Valor del Inventario</div>
-          <div className="text-2xl font-bold">$15,480,000</div>
-          <div className="flex items-center mt-2 text-sm text-green-600">
-            <TrendingUpIcon className="w-4 h-4 mr-1" />
-            <span>+5.2% vs. mes anterior</span>
-          </div>
-        </div>
-        <div className="bg-white rounded-xl p-6 shadow-sm">
-          <div className="text-sm text-gray-500 mb-1">Productos Bajos</div>
-          <div className="text-2xl font-bold">18</div>
-          <div className="flex items-center mt-2 text-sm text-orange-600">
-            <AlertIcon className="w-4 h-4 mr-1" />
-            <span>Requieren reposición</span>
-          </div>
-        </div>
-        <div className="bg-white rounded-xl p-6 shadow-sm">
-          <div className="text-sm text-gray-500 mb-1">Productos Agotados</div>
-          <div className="text-2xl font-bold">5</div>
-          <div className="flex items-center mt-2 text-sm text-red-600">
-            <XIcon className="w-4 h-4 mr-1" />
-            <span>Fuera de stock</span>
-          </div>
-        </div>
-      </div>
+      <Tabs defaultValue="productos">
+        <TabsList className="grid grid-cols-4 mb-4">
+          <TabsTrigger value="productos">Productos</TabsTrigger>
+          <TabsTrigger value="proveedores">Proveedores</TabsTrigger>
+          <TabsTrigger value="categorias">Categorías</TabsTrigger>
+          <TabsTrigger value="compras">Compras</TabsTrigger>
+        </TabsList>
 
-      <div className="bg-white rounded-xl p-6 shadow-sm mb-6">
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="font-medium">Inventario de Productos</h2>
-          <div className="flex gap-2">
-            <div className="relative">
-              <input
-                type="text"
-                placeholder="Buscar producto..."
-                className="pl-8 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-black"
-              />
-              <SearchIcon className="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-            </div>
-            <select className="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-black">
-              <option>Todas las categorías</option>
-              <option>Shampoo</option>
-              <option>Acondicionador</option>
-              <option>Tintes</option>
-              <option>Tratamientos</option>
-            </select>
-            <button className="px-3 py-2 bg-black text-white rounded-md hover:bg-gray-800">Filtrar</button>
-          </div>
-        </div>
+        <TabsContent value="productos">
+          <Card>
+            <CardHeader className="pb-2">
+              <CardTitle>Gestión de Productos</CardTitle>
+              <div className="flex items-center justify-between mt-2">
+                <div className="relative w-64">
+                  <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+                  <Input type="search" placeholder="Buscar productos..." className="pl-8" />
+                </div>
+                <Button variant="outline" size="sm" className="flex items-center gap-1">
+                  <Filter className="h-4 w-4" />
+                  Filtrar
+                </Button>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead className="w-[100px]">Código</TableHead>
+                    <TableHead>Nombre</TableHead>
+                    <TableHead>Categoría</TableHead>
+                    <TableHead className="text-right">Stock</TableHead>
+                    <TableHead className="text-right">Precio</TableHead>
+                    <TableHead>Estado</TableHead>
+                    <TableHead className="text-right">Acciones</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {currentItems.map((producto) => (
+                    <TableRow key={producto.id}>
+                      <TableCell className="font-medium">{producto.codigo}</TableCell>
+                      <TableCell>{producto.nombre}</TableCell>
+                      <TableCell>{producto.categoria}</TableCell>
+                      <TableCell className="text-right">{producto.stock}</TableCell>
+                      <TableCell className="text-right">${producto.precio.toFixed(2)}</TableCell>
+                      <TableCell>
+                        <span
+                          className={`px-2 py-1 rounded-full text-xs ${
+                            producto.estado === "Activo" ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"
+                          }`}
+                        >
+                          {producto.estado}
+                        </span>
+                      </TableCell>
+                      <TableCell className="text-right">
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" className="h-8 w-8 p-0">
+                              <MoreHorizontal className="h-4 w-4" />
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="end">
+                            <DropdownMenuItem onClick={() => handleViewProduct(producto)}>
+                              <Eye className="mr-2 h-4 w-4" />
+                              Ver detalles
+                            </DropdownMenuItem>
+                            <DropdownMenuItem asChild>
+                              <Link href={`/inventarios/editar-producto/${producto.id}`}>
+                                <Edit className="mr-2 h-4 w-4" />
+                                Editar
+                              </Link>
+                            </DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => handleDeleteProduct(producto)}>
+                              <Trash2 className="mr-2 h-4 w-4" />
+                              Eliminar
+                            </DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
 
-        <div className="overflow-x-auto">
-          <table className="w-full">
-            <thead>
-              <tr className="text-left text-sm text-gray-500 border-b">
-                <th className="pb-3 font-medium">Código</th>
-                <th className="pb-3 font-medium">Producto</th>
-                <th className="pb-3 font-medium">Categoría</th>
-                <th className="pb-3 font-medium">Stock</th>
-                <th className="pb-3 font-medium">Precio</th>
-                <th className="pb-3 font-medium">Estado</th>
-                <th className="pb-3 font-medium">Acciones</th>
-              </tr>
-            </thead>
-            <tbody>
-              {[
-                {
-                  id: "P001",
-                  nombre: "Shampoo Profesional",
-                  categoria: "Shampoo",
-                  stock: 25,
-                  precio: "$35,000",
-                  estado: "Disponible",
-                },
-                {
-                  id: "P002",
-                  nombre: "Acondicionador Hidratante",
-                  categoria: "Acondicionador",
-                  stock: 18,
-                  precio: "$32,000",
-                  estado: "Disponible",
-                },
-                {
-                  id: "P003",
-                  nombre: "Tinte Rubio Platino",
-                  categoria: "Tintes",
-                  stock: 5,
-                  precio: "$45,000",
-                  estado: "Bajo Stock",
-                },
-                {
-                  id: "P004",
-                  nombre: "Tratamiento Capilar",
-                  categoria: "Tratamientos",
-                  stock: 12,
-                  precio: "$60,000",
-                  estado: "Disponible",
-                },
-                {
-                  id: "P005",
-                  nombre: "Mascarilla Reparadora",
-                  categoria: "Tratamientos",
-                  stock: 0,
-                  precio: "$48,000",
-                  estado: "Agotado",
-                },
-              ].map((producto) => (
-                <tr key={producto.id} className="border-b hover:bg-gray-50">
-                  <td className="py-3">{producto.id}</td>
-                  <td className="py-3">{producto.nombre}</td>
-                  <td className="py-3">{producto.categoria}</td>
-                  <td className="py-3">{producto.stock}</td>
-                  <td className="py-3">{producto.precio}</td>
-                  <td className="py-3">
-                    <span
-                      className={`px-2 py-1 rounded-full text-xs ${
-                        producto.estado === "Disponible"
-                          ? "bg-green-100 text-green-800"
-                          : producto.estado === "Bajo Stock"
-                            ? "bg-yellow-100 text-yellow-800"
-                            : "bg-red-100 text-red-800"
-                      }`}
-                    >
-                      {producto.estado}
-                    </span>
-                  </td>
-                  <td className="py-3">
-                    <div className="flex gap-2">
-                      <button className="p-1 text-gray-500 hover:text-gray-700">
-                        <EyeIcon className="w-4 h-4" />
-                      </button>
-                      <button className="p-1 text-gray-500 hover:text-gray-700">
-                        <EditIcon className="w-4 h-4" />
-                      </button>
-                      <button className="p-1 text-gray-500 hover:text-gray-700">
-                        <TrashIcon className="w-4 h-4" />
-                      </button>
+              <div className="mt-4 flex items-center justify-between">
+                <div className="text-sm text-muted-foreground">
+                  Mostrando {indexOfFirstItem + 1}-{Math.min(indexOfLastItem, productosData.length)} de{" "}
+                  {productosData.length} productos
+                </div>
+                <Pagination>
+                  <PaginationContent>
+                    <PaginationItem>
+                      <PaginationPrevious
+                        onClick={() => handlePageChange(Math.max(1, currentPage - 1))}
+                        className={currentPage === 1 ? "pointer-events-none opacity-50" : "cursor-pointer"}
+                      />
+                    </PaginationItem>
+
+                    {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                      <PaginationItem key={page}>
+                        <PaginationLink onClick={() => handlePageChange(page)} isActive={currentPage === page}>
+                          {page}
+                        </PaginationLink>
+                      </PaginationItem>
+                    ))}
+
+                    <PaginationItem>
+                      <PaginationNext
+                        onClick={() => handlePageChange(Math.min(totalPages, currentPage + 1))}
+                        className={currentPage === totalPages ? "pointer-events-none opacity-50" : "cursor-pointer"}
+                      />
+                    </PaginationItem>
+                  </PaginationContent>
+                </Pagination>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="proveedores">
+          <Card>
+            <CardHeader className="pb-2">
+              <div className="flex justify-between items-center">
+                <CardTitle>Gestión de Proveedores</CardTitle>
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <Button className="flex items-center gap-1">
+                      <Plus className="h-4 w-4" />
+                      Agregar Proveedor
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="sm:max-w-[425px]">
+                    <DialogHeader>
+                      <DialogTitle>Agregar Nuevo Proveedor</DialogTitle>
+                      <DialogDescription>
+                        Complete la información del proveedor. Haga clic en guardar cuando termine.
+                      </DialogDescription>
+                    </DialogHeader>
+                    <div className="grid gap-4 py-4">
+                      <div className="grid grid-cols-4 items-center gap-4">
+                        <Label htmlFor="nombre" className="text-right">
+                          Nombre
+                        </Label>
+                        <Input id="nombre" className="col-span-3" />
+                      </div>
+                      <div className="grid grid-cols-4 items-center gap-4">
+                        <Label htmlFor="contacto" className="text-right">
+                          Contacto
+                        </Label>
+                        <Input id="contacto" className="col-span-3" />
+                      </div>
+                      <div className="grid grid-cols-4 items-center gap-4">
+                        <Label htmlFor="telefono" className="text-right">
+                          Teléfono
+                        </Label>
+                        <Input id="telefono" className="col-span-3" />
+                      </div>
+                      <div className="grid grid-cols-4 items-center gap-4">
+                        <Label htmlFor="email" className="text-right">
+                          Email
+                        </Label>
+                        <Input id="email" type="email" className="col-span-3" />
+                      </div>
+                      <div className="grid grid-cols-4 items-center gap-4">
+                        <Label htmlFor="direccion" className="text-right">
+                          Dirección
+                        </Label>
+                        <Input id="direccion" className="col-span-3" />
+                      </div>
                     </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-
-        <div className="flex justify-between items-center mt-4">
-          <div className="text-sm text-gray-500">Mostrando 5 de 248 productos</div>
-          <div className="flex gap-2">
-            <button className="px-3 py-1 border border-gray-300 rounded-md hover:bg-gray-50">Anterior</button>
-            <button className="px-3 py-1 bg-black text-white rounded-md">1</button>
-            <button className="px-3 py-1 border border-gray-300 rounded-md hover:bg-gray-50">2</button>
-            <button className="px-3 py-1 border border-gray-300 rounded-md hover:bg-gray-50">3</button>
-            <button className="px-3 py-1 border border-gray-300 rounded-md hover:bg-gray-50">Siguiente</button>
-          </div>
-        </div>
-      </div>
-
-      <div className="grid grid-cols-2 gap-6">
-        <div className="bg-white rounded-xl p-6 shadow-sm">
-          <h2 className="font-medium mb-4">Productos Más Vendidos</h2>
-          <div className="space-y-4">
-            {[
-              { nombre: "Shampoo Profesional", ventas: 120, porcentaje: 75 },
-              { nombre: "Acondicionador Hidratante", ventas: 95, porcentaje: 60 },
-              { nombre: "Tinte Rubio Platino", ventas: 85, porcentaje: 50 },
-              { nombre: "Tratamiento Capilar", ventas: 70, porcentaje: 40 },
-              { nombre: "Mascarilla Reparadora", ventas: 65, porcentaje: 35 },
-            ].map((producto, index) => (
-              <div key={index} className="flex items-center">
-                <div className="w-36 truncate">{producto.nombre}</div>
-                <div className="flex-1 mx-4">
-                  <div className="w-full bg-gray-200 rounded-full h-2">
-                    <div className="bg-blue-600 h-2 rounded-full" style={{ width: `${producto.porcentaje}%` }}></div>
-                  </div>
-                </div>
-                <div className="text-sm text-gray-500">{producto.ventas} unidades</div>
+                    <DialogFooter>
+                      <Button type="submit">Guardar Proveedor</Button>
+                    </DialogFooter>
+                  </DialogContent>
+                </Dialog>
               </div>
-            ))}
-          </div>
-        </div>
-        <div className="bg-white rounded-xl p-6 shadow-sm">
-          <h2 className="font-medium mb-4">Proveedores</h2>
-          <div className="space-y-3">
-            {[
-              { nombre: "Distribuidora Belleza Pro", productos: 45, ultimaCompra: "10/05/2023" },
-              { nombre: "Importadora Cosmética", productos: 32, ultimaCompra: "05/05/2023" },
-              { nombre: "Productos Capilares S.A.", productos: 28, ultimaCompra: "01/05/2023" },
-              { nombre: "Distribuidora de Tintes", productos: 20, ultimaCompra: "28/04/2023" },
-            ].map((proveedor, index) => (
-              <div key={index} className="p-3 border rounded-lg flex items-center justify-between">
+              <div className="flex items-center justify-between mt-2">
+                <div className="relative w-64">
+                  <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+                  <Input type="search" placeholder="Buscar proveedores..." className="pl-8" />
+                </div>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <Link href="/inventarios/proveedores">
+                <Button variant="outline" className="w-full py-8 text-center">
+                  Ver todos los proveedores
+                </Button>
+              </Link>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="categorias">
+          <Card>
+            <CardHeader className="pb-2">
+              <CardTitle>Gestión de Categorías</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <Link href="/inventarios/categorias">
+                <Button variant="outline" className="w-full py-8 text-center">
+                  Ver todas las categorías
+                </Button>
+              </Link>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="compras">
+          <Card>
+            <CardHeader className="pb-2">
+              <CardTitle>Gestión de Compras</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <Link href="/inventarios/compras">
+                <Button variant="outline" className="w-full py-8 text-center">
+                  Ver todas las compras
+                </Button>
+              </Link>
+            </CardContent>
+          </Card>
+        </TabsContent>
+      </Tabs>
+
+      {/* Dialog para ver detalles del producto */}
+      <Dialog open={isViewDialogOpen} onOpenChange={setIsViewDialogOpen}>
+        <DialogContent className="sm:max-w-[600px]">
+          <DialogHeader>
+            <DialogTitle>Detalles del Producto</DialogTitle>
+          </DialogHeader>
+          {selectedProduct && (
+            <div className="grid gap-4 py-4">
+              <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <div className="font-medium">{proveedor.nombre}</div>
-                  <div className="text-sm text-gray-500">{proveedor.productos} productos</div>
+                  <h3 className="font-medium text-sm text-muted-foreground">Código</h3>
+                  <p>{selectedProduct.codigo}</p>
                 </div>
-                <div className="text-sm">
-                  <div>Última compra:</div>
-                  <div className="text-gray-500">{proveedor.ultimaCompra}</div>
+                <div>
+                  <h3 className="font-medium text-sm text-muted-foreground">Nombre</h3>
+                  <p>{selectedProduct.nombre}</p>
                 </div>
-                <button className="px-3 py-1 bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200">
-                  Ver detalles
-                </button>
+                <div>
+                  <h3 className="font-medium text-sm text-muted-foreground">Categoría</h3>
+                  <p>{selectedProduct.categoria}</p>
+                </div>
+                <div>
+                  <h3 className="font-medium text-sm text-muted-foreground">Stock</h3>
+                  <p>{selectedProduct.stock} unidades</p>
+                </div>
+                <div>
+                  <h3 className="font-medium text-sm text-muted-foreground">Precio</h3>
+                  <p>${selectedProduct.precio.toFixed(2)}</p>
+                </div>
+                <div>
+                  <h3 className="font-medium text-sm text-muted-foreground">Estado</h3>
+                  <span
+                    className={`px-2 py-1 rounded-full text-xs ${
+                      selectedProduct.estado === "Activo" ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"
+                    }`}
+                  >
+                    {selectedProduct.estado}
+                  </span>
+                </div>
               </div>
-            ))}
-            <button className="w-full py-2 border border-dashed rounded-lg text-gray-500 hover:bg-gray-50 flex items-center justify-center gap-2">
-              <PlusIcon className="w-4 h-4" />
-              Agregar proveedor
-            </button>
-          </div>
-        </div>
+              <div>
+                <h3 className="font-medium text-sm text-muted-foreground">Descripción</h3>
+                <p className="text-sm">
+                  Descripción detallada del producto {selectedProduct.nombre}. Esta sección incluiría todas las
+                  especificaciones técnicas, dimensiones, materiales, y otra información relevante del producto.
+                </p>
+              </div>
+            </div>
+          )}
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsViewDialogOpen(false)}>
+              Cerrar
+            </Button>
+            <Link href={`/inventarios/editar-producto/${selectedProduct?.id}`}>
+              <Button>Editar Producto</Button>
+            </Link>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Dialog para confirmar eliminación */}
+      <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>Confirmar Eliminación</DialogTitle>
+            <DialogDescription>
+              ¿Está seguro que desea eliminar el producto "{selectedProduct?.nombre}"? Esta acción no se puede deshacer.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="gap-2 sm:justify-end">
+            <Button variant="outline" onClick={() => setIsDeleteDialogOpen(false)}>
+              Cancelar
+            </Button>
+            <Button
+              variant="destructive"
+              onClick={() => {
+                // Aquí iría la lógica para eliminar el producto
+                setIsDeleteDialogOpen(false)
+              }}
+            >
+              Eliminar
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </div>
       </div>
-    </>
-  )
-}
+    </div>
 
-function PlusIcon() {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="18"
-      height="18"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <line x1="12" y1="5" x2="12" y2="19"></line>
-      <line x1="5" y1="12" x2="19" y2="12"></line>
-    </svg>
-  )
-}
-
-function BoxIcon({ className }: { className?: string }) {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      className={className}
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
-      <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
-      <line x1="12" y1="22.08" x2="12" y2="12"></line>
-    </svg>
-  )
-}
-
-function TrendingUpIcon({ className }: { className?: string }) {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      className={className}
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
-      <polyline points="17 6 23 6 23 12"></polyline>
-    </svg>
-  )
-}
-
-function AlertIcon({ className }: { className?: string }) {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      className={className}
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <circle cx="12" cy="12" r="10"></circle>
-      <line x1="12" y1="8" x2="12" y2="12"></line>
-      <line x1="12" y1="16" x2="12.01" y2="16"></line>
-    </svg>
-  )
-}
-
-function XIcon({ className }: { className?: string }) {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      className={className}
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <line x1="18" y1="6" x2="6" y2="18"></line>
-      <line x1="6" y1="6" x2="18" y2="18"></line>
-    </svg>
-  )
-}
-
-function SearchIcon({ className }: { className?: string }) {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      className={className}
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <circle cx="11" cy="11" r="8"></circle>
-      <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-    </svg>
-  )
-}
-
-function EyeIcon({ className }: { className?: string }) {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      className={className}
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-      <circle cx="12" cy="12" r="3"></circle>
-    </svg>
-  )
-}
-
-function EditIcon({ className }: { className?: string }) {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      className={className}
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
-      <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
-    </svg>
-  )
-}
-
-function TrashIcon({ className }: { className?: string }) {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      className={className}
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <polyline points="3 6 5 6 21 6"></polyline>
-      <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-    </svg>
   )
 }
 

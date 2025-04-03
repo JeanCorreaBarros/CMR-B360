@@ -32,6 +32,9 @@ import {
   CalendarIcon,
 } from "@radix-ui/react-icons"
 
+import { Sidebar } from "@/components/sidebar"
+import { Header } from "@/components/header"
+
 // Tipos para los usuarios
 type Usuario = {
   id: string
@@ -870,9 +873,8 @@ export default function ConfiguracionPage() {
                         <TableCell>{usuario.ultimoAcceso}</TableCell>
                         <TableCell>
                           <span
-                            className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${
-                              usuario.estado === "activo" ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"
-                            }`}
+                            className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${usuario.estado === "activo" ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"
+                              }`}
                           >
                             {usuario.estado === "activo" ? (
                               <>
@@ -1742,9 +1744,8 @@ export default function ConfiguracionPage() {
                     {disenosWeb.map((diseno) => (
                       <div
                         key={diseno.id}
-                        className={`border rounded-lg p-4 cursor-pointer ${
-                          aparienciaWeb.disenoSeleccionado === diseno.id ? "border-blue-500 bg-blue-50" : ""
-                        }`}
+                        className={`border rounded-lg p-4 cursor-pointer ${aparienciaWeb.disenoSeleccionado === diseno.id ? "border-blue-500 bg-blue-50" : ""
+                          }`}
                         onClick={() => setAparienciaWeb({ ...aparienciaWeb, disenoSeleccionado: diseno.id })}
                       >
                         <div className="aspect-video bg-gray-100 rounded-md mb-3 overflow-hidden">
@@ -2142,50 +2143,54 @@ export default function ConfiguracionPage() {
 
   return (
     <div className="flex h-screen bg-gray-50">
-      <main className="flex-1 overflow-y-auto ">
-        <div className="flex items-center justify-between mb-6">
-          <h1 className="text-2xl font-bold">Configuración</h1>
-        </div>
-
-        <div className="grid grid-cols-4 gap-6">
-          <div className="col-span-1">
-            <div className="bg-white rounded-xl p-6 shadow-sm">
-              <h2 className="font-medium mb-4">Menú de Configuración</h2>
-              <nav className="space-y-1">
-                {[
-                  { name: "Perfil", icon: <PersonIcon />, value: "perfil" },
-                  { name: "Empresa", icon: <PersonIcon />, value: "empresa" },
-                  { name: "Usuarios", icon: <GroupIcon />, value: "usuarios" },
-                  { name: "Notificaciones", icon: <BellIcon />, value: "notificaciones" },
-                  { name: "Seguridad", icon: <LockClosedIcon />, value: "seguridad" },
-                  { name: "Facturación", icon: <CardStackIcon />, value: "facturacion" },
-                  { name: "Integraciones", icon: <Link2Icon />, value: "integraciones" },
-                  { name: "Apariencia Web", icon: <ColorWheelIcon />, value: "apariencia" },
-                ].map((item) => (
-                  <a
-                    key={item.value}
-                    href="#"
-                    className={`flex items-center px-3 py-2 text-sm font-medium rounded-md ${
-                      opcionSeleccionada === item.value ? "bg-black text-white" : "text-gray-700 hover:bg-gray-100"
-                    }`}
-                    onClick={(e) => {
-                      e.preventDefault()
-                      setOpcionSeleccionada(item.value)
-                    }}
-                  >
-                    <span className={`mr-3 ${opcionSeleccionada === item.value ? "text-white" : "text-gray-500"}`}>
-                      {item.icon}
-                    </span>
-                    {item.name}
-                  </a>
-                ))}
-              </nav>
-            </div>
+      <Sidebar />
+      <div className="flex flex-col flex-1 overflow-hidden">
+        <Header />
+        <main className="flex-1 overflow-y-auto p-9 ">
+          <div className="flex items-center justify-between mb-6">
+            <h1 className="text-2xl font-bold">Configuración</h1>
           </div>
 
-          <div className="col-span-3">{renderizarVista()}</div>
-        </div>
-      </main>
+          <div className="grid grid-cols-4 gap-6">
+            <div className="col-span-1">
+              <div className="bg-white rounded-xl p-6 shadow-sm">
+                <h2 className="font-medium mb-4">Menú de Configuración</h2>
+                <nav className="space-y-1">
+                  {[
+                    { name: "Perfil", icon: <PersonIcon />, value: "perfil" },
+                    { name: "Empresa", icon: <PersonIcon />, value: "empresa" },
+                    { name: "Usuarios", icon: <GroupIcon />, value: "usuarios" },
+                    { name: "Notificaciones", icon: <BellIcon />, value: "notificaciones" },
+                    { name: "Seguridad", icon: <LockClosedIcon />, value: "seguridad" },
+                    { name: "Facturación", icon: <CardStackIcon />, value: "facturacion" },
+                    { name: "Integraciones", icon: <Link2Icon />, value: "integraciones" },
+                    { name: "Apariencia Web", icon: <ColorWheelIcon />, value: "apariencia" },
+                  ].map((item) => (
+                    <a
+                      key={item.value}
+                      href="#"
+                      className={`flex items-center px-3 py-2 text-sm font-medium rounded-md ${opcionSeleccionada === item.value ? "bg-black text-white" : "text-gray-700 hover:bg-gray-100"
+                        }`}
+                      onClick={(e) => {
+                        e.preventDefault()
+                        setOpcionSeleccionada(item.value)
+                      }}
+                    >
+                      <span className={`mr-3 ${opcionSeleccionada === item.value ? "text-white" : "text-gray-500"}`}>
+                        {item.icon}
+                      </span>
+                      {item.name}
+                    </a>
+                  ))}
+                </nav>
+              </div>
+            </div>
+
+            <div className="col-span-3">{renderizarVista()}</div>
+          </div>
+        </main>
+      </div>
+
     </div>
   )
 }

@@ -432,7 +432,10 @@ export default function ConfiguracionAgendaPage() {
 
   return (
     <div className="flex h-screen bg-gray-50">
-        <main className="flex-1 overflow-y-auto ">
+      <Sidebar />
+      <div className="flex flex-col flex-1 overflow-hidden">
+        <Header />
+        <main className="flex-1 overflow-y-auto p-9 ">
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center gap-2">
               <Button variant="outline" size="icon" onClick={volverAAgenda}>
@@ -1150,6 +1153,8 @@ export default function ConfiguracionAgendaPage() {
             </TabsContent>
           </Tabs>
         </main>
+      </div>
+
     </div>
   )
 }

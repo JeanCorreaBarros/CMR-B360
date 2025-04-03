@@ -61,251 +61,257 @@ export default function FacturasPage() {
 
   return (
     <div className="flex min-h-screen bg-gray-50">
-      <main className="flex-1 overflow-y-auto p-6">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.3 }}
-          className="max-w-6xl mx-auto"
-        >
-          {/* Header con título y botones */}
-          <div className="flex justify-between items-center mb-6">
-            <h1 className="text-2xl font-bold">Facturas</h1>
-            <Link href="/facturacion/nueva-factura">
-              <Button className="bg-blue-600 hover:bg-blue-700">
-                <PlusIcon className="mr-2 h-4 w-4" />
-                Nueva Factura
-              </Button>
-            </Link>
-          </div>
-
-          {/* Filtros y búsqueda */}
-          <div className="bg-white p-4 rounded-lg shadow-sm mb-6">
-            <div className="flex flex-col md:flex-row gap-4">
-              <div className="relative flex-1">
-                <input
-                  type="text"
-                  placeholder="Buscar factura..."
-                  className="w-full pl-10 pr-4 py-2 border rounded-lg"
-                />
-                <SearchIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-              </div>
-              <div className="flex gap-2">
-                <Button variant="outline" className="flex items-center gap-2">
-                  <FilterIcon className="h-4 w-4" />
-                  Filtrar
+      <Sidebar />
+      <div className="flex flex-col flex-1 overflow-hidden">
+        <Header />
+        <main className="flex-1 overflow-y-auto p-9">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3 }}
+            className="max-w-6xl mx-auto"
+          >
+            {/* Header con título y botones */}
+            <div className="flex justify-between items-center mb-6">
+              <h1 className="text-2xl font-bold">Facturas</h1>
+              <Link href="/facturacion/nueva-factura">
+                <Button className="bg-blue-600 hover:bg-blue-700">
+                  <PlusIcon className="mr-2 h-4 w-4" />
+                  Nueva Factura
                 </Button>
-                <select className="border rounded-lg px-3 py-2">
-                  <option>Todas</option>
-                  <option>Pagadas</option>
-                  <option>Pendientes</option>
-                  <option>Anuladas</option>
-                </select>
-                <select className="border rounded-lg px-3 py-2">
-                  <option>Este mes</option>
-                  <option>Último mes</option>
-                  <option>Último trimestre</option>
-                  <option>Este año</option>
-                </select>
-              </div>
-            </div>
-          </div>
-
-          {/* Tabla de facturas */}
-          <div className="bg-white rounded-lg shadow-sm overflow-hidden mb-6">
-            <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead>
-                  <tr className="bg-gray-50 border-b">
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      No. Factura
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Cliente
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Fecha
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Total
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Estado
-                    </th>
-                    <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Acciones
-                    </th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-200">
-                  {paginatedFacturas.map((factura) => (
-                    <motion.tr
-                      key={factura.id}
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      transition={{ duration: 0.3 }}
-                      className="hover:bg-gray-50"
-                    >
-                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-blue-600">{factura.id}</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{factura.cliente}</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        {new Date(factura.fecha).toLocaleDateString("es-ES")}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                        {formatCurrency(factura.total)}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <span
-                          className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusColor(factura.estado)}`}
-                        >
-                          {factura.estado}
-                        </span>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                        <div className="flex justify-end space-x-2">
-                          <Dialog>
-                            <DialogTrigger asChild>
-                              <Button
-                                variant="ghost"
-                                size="sm"
-                                className="text-blue-600 hover:text-blue-800"
-                                onClick={() => setSelectedFactura(factura)}
-                              >
-                                <EyeIcon className="h-4 w-4" />
-                              </Button>
-                            </DialogTrigger>
-                            <DialogContent className="max-w-3xl">
-                              <DialogHeader>
-                                <DialogTitle>Factura {selectedFactura?.id}</DialogTitle>
-                              </DialogHeader>
-                              <div className="p-4">
-                                {selectedFactura && (
-                                  <div className="space-y-4">
-                                    <div className="grid grid-cols-2 gap-4">
-                                      <div>
-                                        <h3 className="font-semibold">Información del cliente</h3>
-                                        <p>Cliente: {selectedFactura.cliente}</p>
-                                        <p>Teléfono: 123-456-7890</p>
-                                        <p>Email: cliente@ejemplo.com</p>
-                                      </div>
-                                      <div>
-                                        <h3 className="font-semibold">Información de la factura</h3>
-                                        <p>Número: {selectedFactura.id}</p>
-                                        <p>Fecha: {new Date(selectedFactura.fecha).toLocaleDateString("es-ES")}</p>
-                                        <p>Estado: {selectedFactura.estado}</p>
-                                      </div>
-                                    </div>
-                                    <div>
-                                      <h3 className="font-semibold mb-2">Detalles</h3>
-                                      <table className="w-full">
-                                        <thead>
-                                          <tr className="border-b">
-                                            <th className="text-left py-2">Descripción</th>
-                                            <th className="text-right py-2">Cantidad</th>
-                                            <th className="text-right py-2">Precio</th>
-                                            <th className="text-right py-2">Total</th>
-                                          </tr>
-                                        </thead>
-                                        <tbody>
-                                          <tr className="border-b">
-                                            <td className="py-2">Servicio de corte de cabello</td>
-                                            <td className="py-2 text-right">1</td>
-                                            <td className="py-2 text-right">
-                                              {formatCurrency(selectedFactura.total * 0.7)}
-                                            </td>
-                                            <td className="py-2 text-right">
-                                              {formatCurrency(selectedFactura.total * 0.7)}
-                                            </td>
-                                          </tr>
-                                          <tr className="border-b">
-                                            <td className="py-2">Productos para el cabello</td>
-                                            <td className="py-2 text-right">1</td>
-                                            <td className="py-2 text-right">
-                                              {formatCurrency(selectedFactura.total * 0.3)}
-                                            </td>
-                                            <td className="py-2 text-right">
-                                              {formatCurrency(selectedFactura.total * 0.3)}
-                                            </td>
-                                          </tr>
-                                        </tbody>
-                                        <tfoot>
-                                          <tr>
-                                            <td colSpan={3} className="text-right py-2 font-semibold">
-                                              Total:
-                                            </td>
-                                            <td className="text-right py-2 font-semibold">
-                                              {formatCurrency(selectedFactura.total)}
-                                            </td>
-                                          </tr>
-                                        </tfoot>
-                                      </table>
-                                    </div>
-                                    <div className="flex justify-end space-x-2">
-                                      <Button variant="outline">
-                                        <DownloadIcon className="mr-2 h-4 w-4" />
-                                        Descargar PDF
-                                      </Button>
-                                    </div>
-                                  </div>
-                                )}
-                              </div>
-                            </DialogContent>
-                          </Dialog>
-                          <Button variant="ghost" size="sm" className="text-amber-600 hover:text-amber-800">
-                            <EditIcon className="h-4 w-4" />
-                          </Button>
-                          <Button variant="ghost" size="sm" className="text-red-600 hover:text-red-800">
-                            <TrashIcon className="h-4 w-4" />
-                          </Button>
-                          <Button variant="ghost" size="sm" className="text-gray-600 hover:text-gray-800">
-                            <DownloadIcon className="h-4 w-4" />
-                          </Button>
-                        </div>
-                      </td>
-                    </motion.tr>
-                  ))}
-                </tbody>
-              </table>
+              </Link>
             </div>
 
-            {/* Paginación */}
-            <div className="px-6 py-4 flex items-center justify-between border-t">
-              <div className="text-sm text-gray-500">
-                Mostrando {(currentPage - 1) * itemsPerPage + 1} a{" "}
-                {Math.min(currentPage * itemsPerPage, facturas.length)} de {facturas.length} facturas
-              </div>
-              <div className="flex space-x-2">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-                  disabled={currentPage === 1}
-                >
-                  <ChevronLeftIcon className="h-4 w-4" />
-                </Button>
-                {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-                  <Button
-                    key={page}
-                    variant={currentPage === page ? "default" : "outline"}
-                    size="sm"
-                    onClick={() => setCurrentPage(page)}
-                  >
-                    {page}
+            {/* Filtros y búsqueda */}
+            <div className="bg-white p-4 rounded-lg shadow-sm mb-6">
+              <div className="flex flex-col md:flex-row gap-4">
+                <div className="relative flex-1">
+                  <input
+                    type="text"
+                    placeholder="Buscar factura..."
+                    className="w-full pl-10 pr-4 py-2 border rounded-lg"
+                  />
+                  <SearchIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+                </div>
+                <div className="flex gap-2">
+                  <Button variant="outline" className="flex items-center gap-2">
+                    <FilterIcon className="h-4 w-4" />
+                    Filtrar
                   </Button>
-                ))}
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
-                  disabled={currentPage === totalPages}
-                >
-                  <ChevronRightIcon className="h-4 w-4" />
-                </Button>
+                  <select className="border rounded-lg px-3 py-2">
+                    <option>Todas</option>
+                    <option>Pagadas</option>
+                    <option>Pendientes</option>
+                    <option>Anuladas</option>
+                  </select>
+                  <select className="border rounded-lg px-3 py-2">
+                    <option>Este mes</option>
+                    <option>Último mes</option>
+                    <option>Último trimestre</option>
+                    <option>Este año</option>
+                  </select>
+                </div>
               </div>
             </div>
-          </div>
-        </motion.div>
-      </main>
+
+            {/* Tabla de facturas */}
+            <div className="bg-white rounded-lg shadow-sm overflow-hidden mb-6">
+              <div className="overflow-x-auto">
+                <table className="w-full">
+                  <thead>
+                    <tr className="bg-gray-50 border-b">
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        No. Factura
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Cliente
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Fecha
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Total
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Estado
+                      </th>
+                      <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Acciones
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-gray-200">
+                    {paginatedFacturas.map((factura) => (
+                      <motion.tr
+                        key={factura.id}
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ duration: 0.3 }}
+                        className="hover:bg-gray-50"
+                      >
+                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-blue-600">{factura.id}</td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{factura.cliente}</td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                          {new Date(factura.fecha).toLocaleDateString("es-ES")}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                          {formatCurrency(factura.total)}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <span
+                            className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusColor(factura.estado)}`}
+                          >
+                            {factura.estado}
+                          </span>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                          <div className="flex justify-end space-x-2">
+                            <Dialog>
+                              <DialogTrigger asChild>
+                                <Button
+                                  variant="ghost"
+                                  size="sm"
+                                  className="text-blue-600 hover:text-blue-800"
+                                  onClick={() => setSelectedFactura(factura)}
+                                >
+                                  <EyeIcon className="h-4 w-4" />
+                                </Button>
+                              </DialogTrigger>
+                              <DialogContent className="max-w-3xl">
+                                <DialogHeader>
+                                  <DialogTitle>Factura {selectedFactura?.id}</DialogTitle>
+                                </DialogHeader>
+                                <div className="p-4">
+                                  {selectedFactura && (
+                                    <div className="space-y-4">
+                                      <div className="grid grid-cols-2 gap-4">
+                                        <div>
+                                          <h3 className="font-semibold">Información del cliente</h3>
+                                          <p>Cliente: {selectedFactura.cliente}</p>
+                                          <p>Teléfono: 123-456-7890</p>
+                                          <p>Email: cliente@ejemplo.com</p>
+                                        </div>
+                                        <div>
+                                          <h3 className="font-semibold">Información de la factura</h3>
+                                          <p>Número: {selectedFactura.id}</p>
+                                          <p>Fecha: {new Date(selectedFactura.fecha).toLocaleDateString("es-ES")}</p>
+                                          <p>Estado: {selectedFactura.estado}</p>
+                                        </div>
+                                      </div>
+                                      <div>
+                                        <h3 className="font-semibold mb-2">Detalles</h3>
+                                        <table className="w-full">
+                                          <thead>
+                                            <tr className="border-b">
+                                              <th className="text-left py-2">Descripción</th>
+                                              <th className="text-right py-2">Cantidad</th>
+                                              <th className="text-right py-2">Precio</th>
+                                              <th className="text-right py-2">Total</th>
+                                            </tr>
+                                          </thead>
+                                          <tbody>
+                                            <tr className="border-b">
+                                              <td className="py-2">Servicio de corte de cabello</td>
+                                              <td className="py-2 text-right">1</td>
+                                              <td className="py-2 text-right">
+                                                {formatCurrency(selectedFactura.total * 0.7)}
+                                              </td>
+                                              <td className="py-2 text-right">
+                                                {formatCurrency(selectedFactura.total * 0.7)}
+                                              </td>
+                                            </tr>
+                                            <tr className="border-b">
+                                              <td className="py-2">Productos para el cabello</td>
+                                              <td className="py-2 text-right">1</td>
+                                              <td className="py-2 text-right">
+                                                {formatCurrency(selectedFactura.total * 0.3)}
+                                              </td>
+                                              <td className="py-2 text-right">
+                                                {formatCurrency(selectedFactura.total * 0.3)}
+                                              </td>
+                                            </tr>
+                                          </tbody>
+                                          <tfoot>
+                                            <tr>
+                                              <td colSpan={3} className="text-right py-2 font-semibold">
+                                                Total:
+                                              </td>
+                                              <td className="text-right py-2 font-semibold">
+                                                {formatCurrency(selectedFactura.total)}
+                                              </td>
+                                            </tr>
+                                          </tfoot>
+                                        </table>
+                                      </div>
+                                      <div className="flex justify-end space-x-2">
+                                        <Button variant="outline">
+                                          <DownloadIcon className="mr-2 h-4 w-4" />
+                                          Descargar PDF
+                                        </Button>
+                                      </div>
+                                    </div>
+                                  )}
+                                </div>
+                              </DialogContent>
+                            </Dialog>
+                            <Button variant="ghost" size="sm" className="text-amber-600 hover:text-amber-800">
+                              <EditIcon className="h-4 w-4" />
+                            </Button>
+                            <Button variant="ghost" size="sm" className="text-red-600 hover:text-red-800">
+                              <TrashIcon className="h-4 w-4" />
+                            </Button>
+                            <Button variant="ghost" size="sm" className="text-gray-600 hover:text-gray-800">
+                              <DownloadIcon className="h-4 w-4" />
+                            </Button>
+                          </div>
+                        </td>
+                      </motion.tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+
+              {/* Paginación */}
+              <div className="px-6 py-4 flex items-center justify-between border-t">
+                <div className="text-sm text-gray-500">
+                  Mostrando {(currentPage - 1) * itemsPerPage + 1} a{" "}
+                  {Math.min(currentPage * itemsPerPage, facturas.length)} de {facturas.length} facturas
+                </div>
+                <div className="flex space-x-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                    disabled={currentPage === 1}
+                  >
+                    <ChevronLeftIcon className="h-4 w-4" />
+                  </Button>
+                  {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                    <Button
+                      key={page}
+                      variant={currentPage === page ? "default" : "outline"}
+                      size="sm"
+                      onClick={() => setCurrentPage(page)}
+                    >
+                      {page}
+                    </Button>
+                  ))}
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+                    disabled={currentPage === totalPages}
+                  >
+                    <ChevronRightIcon className="h-4 w-4" />
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        </main>
+      </div>
+
+
     </div>
   )
 }

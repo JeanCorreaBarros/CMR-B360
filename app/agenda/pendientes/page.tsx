@@ -137,170 +137,177 @@ export default function CitasPendientesPage() {
 
   return (
     <div className="flex h-screen bg-gray-50">
-      <main className="flex-1 overflow-y-auto ">
-        <div className="flex items-center justify-between mb-6">
-          <h1 className="text-2xl font-bold">Citas Pendientes</h1>
-        </div>
 
-        <Card>
-          <CardHeader>
-            <CardTitle>Citas por Confirmar</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Cliente</TableHead>
-                  <TableHead>Servicio</TableHead>
-                  <TableHead>Estilista</TableHead>
-                  <TableHead>Fecha</TableHead>
-                  <TableHead>Hora</TableHead>
-                  <TableHead>Acciones</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {citas.map((cita) => (
-                  <TableRow key={cita.id}>
-                    <TableCell className="font-medium">{cita.clienteNombre}</TableCell>
-                    <TableCell>{cita.servicio}</TableCell>
-                    <TableCell>{cita.estilista}</TableCell>
-                    <TableCell>{format(cita.fecha, "dd/MM/yyyy", { locale: es })}</TableCell>
-                    <TableCell>
-                      {cita.horaInicio} - {cita.horaFin}
-                    </TableCell>
-                    <TableCell>
+      <Sidebar />
+      <div className="flex flex-col flex-1 overflow-hidden">
+        <Header />
+        <main className="flex-1 overflow-y-auto p-9 ">
+          <div className="flex items-center justify-between mb-6">
+            <h1 className="text-2xl font-bold">Citas Pendientes</h1>
+          </div>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Citas por Confirmar</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Cliente</TableHead>
+                    <TableHead>Servicio</TableHead>
+                    <TableHead>Estilista</TableHead>
+                    <TableHead>Fecha</TableHead>
+                    <TableHead>Hora</TableHead>
+                    <TableHead>Acciones</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {citas.map((cita) => (
+                    <TableRow key={cita.id}>
+                      <TableCell className="font-medium">{cita.clienteNombre}</TableCell>
+                      <TableCell>{cita.servicio}</TableCell>
+                      <TableCell>{cita.estilista}</TableCell>
+                      <TableCell>{format(cita.fecha, "dd/MM/yyyy", { locale: es })}</TableCell>
+                      <TableCell>
+                        {cita.horaInicio} - {cita.horaFin}
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex gap-2">
+                          <Button
+                            variant="outline"
+                            size="icon"
+                            className="h-8 w-8 rounded-full bg-green-50 text-green-600 hover:bg-green-100 hover:text-green-700"
+                            onClick={() => {
+                              setSelectedCita(cita)
+                              setIsConfirmDialogOpen(true)
+                            }}
+                          >
+                            <CheckIcon className="h-4 w-4" />
+                          </Button>
+                          <Button
+                            variant="outline"
+                            size="icon"
+                            className="h-8 w-8 rounded-full bg-red-50 text-red-600 hover:bg-red-100 hover:text-red-700"
+                            onClick={() => {
+                              setSelectedCita(cita)
+                              setIsCancelDialogOpen(true)
+                            }}
+                          >
+                            <Cross2Icon className="h-4 w-4" />
+                          </Button>
+                          <Button
+                            variant="outline"
+                            size="icon"
+                            className="h-8 w-8 rounded-full"
+                            onClick={() => {
+                              setSelectedCita(cita)
+                              setIsCallDialogOpen(true)
+                            }}
+                          >
+                            <EnvelopeClosedIcon className="h-4 w-4" />
+                          </Button>
+                          <Button
+                            variant="outline"
+                            size="icon"
+                            className="h-8 w-8 rounded-full"
+                            onClick={() => {
+                              setSelectedCita(cita)
+                              setIsMessageDialogOpen(true)
+                            }}
+                          >
+                            <ChatBubbleIcon className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                  {citas.length === 0 && (
+                    <TableRow>
+                      <TableCell colSpan={6} className="text-center py-4 text-gray-500">
+                        No hay citas pendientes
+                      </TableCell>
+                    </TableRow>
+                  )}
+                </TableBody>
+              </Table>
+            </CardContent>
+          </Card>
+
+          <div className="grid grid-cols-2 gap-6 mt-6">
+            <Card>
+              <CardHeader>
+                <CardTitle>Próximas Confirmaciones</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  {citas.slice(0, 3).map((cita) => (
+                    <div key={cita.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-full bg-orange-100 flex items-center justify-center text-orange-600">
+                          <ClockIcon className="h-5 w-5" />
+                        </div>
+                        <div>
+                          <div className="font-medium">{cita.clienteNombre}</div>
+                          <div className="text-sm text-gray-500">
+                            {format(cita.fecha, "dd/MM/yyyy", { locale: es })} • {cita.horaInicio}
+                          </div>
+                        </div>
+                      </div>
                       <div className="flex gap-2">
                         <Button
                           variant="outline"
-                          size="icon"
-                          className="h-8 w-8 rounded-full bg-green-50 text-green-600 hover:bg-green-100 hover:text-green-700"
+                          size="sm"
+                          className="bg-green-50 text-green-600 hover:bg-green-100 hover:text-green-700 border-green-200"
                           onClick={() => {
                             setSelectedCita(cita)
                             setIsConfirmDialogOpen(true)
                           }}
                         >
-                          <CheckIcon className="h-4 w-4" />
+                          Confirmar
                         </Button>
-                        <Button
-                          variant="outline"
-                          size="icon"
-                          className="h-8 w-8 rounded-full bg-red-50 text-red-600 hover:bg-red-100 hover:text-red-700"
-                          onClick={() => {
-                            setSelectedCita(cita)
-                            setIsCancelDialogOpen(true)
-                          }}
-                        >
-                          <Cross2Icon className="h-4 w-4" />
-                        </Button>
-                        <Button
-                          variant="outline"
-                          size="icon"
-                          className="h-8 w-8 rounded-full"
-                          onClick={() => {
-                            setSelectedCita(cita)
-                            setIsCallDialogOpen(true)
-                          }}
-                        >
-                          <EnvelopeClosedIcon className="h-4 w-4" />
-                        </Button>
-                        <Button
-                          variant="outline"
-                          size="icon"
-                          className="h-8 w-8 rounded-full"
-                          onClick={() => {
-                            setSelectedCita(cita)
-                            setIsMessageDialogOpen(true)
-                          }}
-                        >
-                          <ChatBubbleIcon className="h-4 w-4" />
-                        </Button>
-                      </div>
-                    </TableCell>
-                  </TableRow>
-                ))}
-                {citas.length === 0 && (
-                  <TableRow>
-                    <TableCell colSpan={6} className="text-center py-4 text-gray-500">
-                      No hay citas pendientes
-                    </TableCell>
-                  </TableRow>
-                )}
-              </TableBody>
-            </Table>
-          </CardContent>
-        </Card>
-
-        <div className="grid grid-cols-2 gap-6 mt-6">
-          <Card>
-            <CardHeader>
-              <CardTitle>Próximas Confirmaciones</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                {citas.slice(0, 3).map((cita) => (
-                  <div key={cita.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-full bg-orange-100 flex items-center justify-center text-orange-600">
-                        <ClockIcon className="h-5 w-5" />
-                      </div>
-                      <div>
-                        <div className="font-medium">{cita.clienteNombre}</div>
-                        <div className="text-sm text-gray-500">
-                          {format(cita.fecha, "dd/MM/yyyy", { locale: es })} • {cita.horaInicio}
-                        </div>
                       </div>
                     </div>
-                    <div className="flex gap-2">
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        className="bg-green-50 text-green-600 hover:bg-green-100 hover:text-green-700 border-green-200"
-                        onClick={() => {
-                          setSelectedCita(cita)
-                          setIsConfirmDialogOpen(true)
-                        }}
-                      >
-                        Confirmar
-                      </Button>
-                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardHeader>
+                <CardTitle>Estadísticas de Confirmación</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="p-4 bg-green-50 rounded-lg text-center">
+                    <div className="text-2xl font-bold text-green-600">85%</div>
+                    <div className="text-sm text-gray-600">Tasa de Confirmación</div>
                   </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardHeader>
-              <CardTitle>Estadísticas de Confirmación</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-2 gap-4">
-                <div className="p-4 bg-green-50 rounded-lg text-center">
-                  <div className="text-2xl font-bold text-green-600">85%</div>
-                  <div className="text-sm text-gray-600">Tasa de Confirmación</div>
+                  <div className="p-4 bg-red-50 rounded-lg text-center">
+                    <div className="text-2xl font-bold text-red-600">15%</div>
+                    <div className="text-sm text-gray-600">Tasa de Cancelación</div>
+                  </div>
                 </div>
-                <div className="p-4 bg-red-50 rounded-lg text-center">
-                  <div className="text-2xl font-bold text-red-600">15%</div>
-                  <div className="text-sm text-gray-600">Tasa de Cancelación</div>
+                <div className="mt-4">
+                  <h3 className="text-sm font-medium mb-2">Tiempo promedio de confirmación</h3>
+                  <div className="w-full bg-gray-200 rounded-full h-2.5">
+                    <div className="bg-blue-600 h-2.5 rounded-full" style={{ width: "70%" }}></div>
+                  </div>
+                  <div className="flex justify-between mt-1 text-xs text-gray-500">
+                    <span>0 horas</span>
+                    <span>24 horas</span>
+                    <span>48 horas</span>
+                  </div>
+                  <p className="text-sm text-center mt-2 text-gray-600">
+                    La mayoría de los clientes confirman en las primeras 12 horas
+                  </p>
                 </div>
-              </div>
-              <div className="mt-4">
-                <h3 className="text-sm font-medium mb-2">Tiempo promedio de confirmación</h3>
-                <div className="w-full bg-gray-200 rounded-full h-2.5">
-                  <div className="bg-blue-600 h-2.5 rounded-full" style={{ width: "70%" }}></div>
-                </div>
-                <div className="flex justify-between mt-1 text-xs text-gray-500">
-                  <span>0 horas</span>
-                  <span>24 horas</span>
-                  <span>48 horas</span>
-                </div>
-                <p className="text-sm text-center mt-2 text-gray-600">
-                  La mayoría de los clientes confirman en las primeras 12 horas
-                </p>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-      </main>
+              </CardContent>
+            </Card>
+          </div>
+        </main>
+      </div>
+
+
 
       {/* Diálogo de confirmación */}
       <Dialog open={isConfirmDialogOpen} onOpenChange={setIsConfirmDialogOpen}>

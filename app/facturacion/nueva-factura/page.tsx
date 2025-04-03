@@ -1,12 +1,13 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import { motion } from "framer-motion"
 import { ArrowLeft, Save, Send, PlusCircle, Trash2, HelpCircle, Download, Printer } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import Image from "next/image"
 
 export default function NuevaFacturaPage() {
   const [items, setItems] = useState([
@@ -33,6 +34,16 @@ export default function NuevaFacturaPage() {
   const [medioPago, setMedioPago] = useState("Efectivo")
   const [showPaymentMethodDialog, setShowPaymentMethodDialog] = useState(false)
   const [metodoPagoDetalle, setMetodoPagoDetalle] = useState("")
+  const [logoImage, setLogoImage] = useState(null)
+  const [signatureImage, setSignatureImage] = useState(null)
+  const [logoPreview, setLogoPreview] = useState(null)
+  const [signaturePreview, setSignaturePreview] = useState(null)
+  const [isPrinting, setIsPrinting] = useState(false)
+  const [isDownloading, setIsDownloading] = useState(false)
+  const [isEmitting, setIsEmitting] = useState(false)
+
+  const logoInputRef = useRef(null)
+  const signatureInputRef = useRef(null)
 
   useEffect(() => {
     // Establecer la fecha actual por defecto
@@ -44,9 +55,14 @@ export default function NuevaFacturaPage() {
     // Calcular totales cuando cambian los items
     let newSubtotal = 0
     let newImpuestos = 0
+    let totalDescuentos = 0
 
     items.forEach((item) => {
-      const itemTotal = item.precio * item.cantidad * (1 - (item.descuento || 0) / 100)
+      const itemSubtotal = item.precio * item.cantidad
+      const itemDescuento = itemSubtotal * (item.descuento / 100)
+      totalDescuentos += itemDescuento
+
+      const itemTotal = itemSubtotal - itemDescuento
       newSubtotal += itemTotal
 
       if (item.impuesto) {
@@ -57,8 +73,9 @@ export default function NuevaFacturaPage() {
 
     setSubtotal(newSubtotal)
     setImpuestos(newImpuestos)
-    setTotal(newSubtotal + newImpuestos - descuento)
-  }, [items, descuento])
+    setDescuento(totalDescuentos)
+    setTotal(newSubtotal + newImpuestos)
+  }, [items])
 
   const addItem = () => {
     setItems([
@@ -99,6 +116,56 @@ export default function NuevaFacturaPage() {
   const handleMedioPagoChange = (e) => {
     setMedioPago(e.target.value)
     setMetodoPagoDetalle("")
+  }
+
+  const handleLogoUpload = (e) => {
+    const file = e.target.files[0]
+    if (file) {
+      setLogoImage(file)
+      const reader = new FileReader()
+      reader.onloadend = () => {
+        setLogoPreview(reader.result)
+      }
+      reader.readAsDataURL(file)
+    }
+  }
+
+  const handleSignatureUpload = (e) => {
+    const file = e.target.files[0]
+    if (file) {
+      setSignatureImage(file)
+      const reader = new FileReader()
+      reader.onloadend = () => {
+        setSignaturePreview(reader.result)
+      }
+      reader.readAsDataURL(file)
+    }
+  }
+
+  const handlePrint = () => {
+    setIsPrinting(true)
+    setTimeout(() => {
+      window.print()
+      setIsPrinting(false)
+    }, 500)
+  }
+
+  const handleDownload = () => {
+    setIsDownloading(true)
+    setTimeout(() => {
+      // Simulación de descarga
+      alert("Factura descargada como PDF")
+      setIsDownloading(false)
+    }, 1000)
+  }
+
+  const handleEmitInvoice = () => {
+    setIsEmitting(true)
+    setTimeout(() => {
+      // Simulación de emisión
+      alert("Factura emitida correctamente")
+      setIsEmitting(false)
+    }, 1500)
   }
 
   const containerVariants = {
@@ -145,17 +212,26 @@ export default function NuevaFacturaPage() {
             <Save className="h-4 w-4" />
             Guardar Borrador
           </Button>
-          <Button variant="outline" className="flex items-center gap-1">
+          <Button variant="outline" className="flex items-center gap-1" onClick={handlePrint} disabled={isPrinting}>
             <Printer className="h-4 w-4" />
-            Imprimir
+            {isPrinting ? "Imprimiendo..." : "Imprimir"}
           </Button>
-          <Button variant="outline" className="flex items-center gap-1">
+          <Button
+            variant="outline"
+            className="flex items-center gap-1"
+            onClick={handleDownload}
+            disabled={isDownloading}
+          >
             <Download className="h-4 w-4" />
-            Descargar
+            {isDownloading ? "Descargando..." : "Descargar"}
           </Button>
-          <Button className="bg-blue-600 hover:bg-blue-700 flex items-center gap-1">
+          <Button
+            className="bg-blue-600 hover:bg-blue-700 flex items-center gap-1"
+            onClick={handleEmitInvoice}
+            disabled={isEmitting}
+          >
             <Send className="h-4 w-4" />
-            Emitir Factura
+            {isEmitting ? "Emitiendo..." : "Emitir Factura"}
           </Button>
         </div>
       </motion.div>
@@ -201,8 +277,26 @@ export default function NuevaFacturaPage() {
 
       {/* Company Info */}
       <motion.div variants={itemVariants} className="flex flex-col md:flex-row justify-between items-start mb-6">
-        <div className="w-48 h-32 border-2 border-dashed border-gray-300 flex items-center justify-center rounded-md cursor-pointer hover:bg-gray-50 transition-colors">
-          <span className="text-gray-500">Utilizar mi logo</span>
+        <div
+          className="w-48 h-32 border-2 border-dashed border-gray-300 flex items-center justify-center rounded-md cursor-pointer hover:bg-gray-50 transition-colors relative overflow-hidden"
+          onClick={() => logoInputRef.current.click()}
+        >
+          {logoPreview ? (
+            <div className="relative w-full h-full">
+              <Image
+                src={logoPreview || "/placeholder.svg"}
+                alt="Logo de la empresa"
+                fill
+                style={{ objectFit: "contain" }}
+              />
+              <div className="absolute inset-0 bg-black bg-opacity-0 hover:bg-opacity-20 flex items-center justify-center transition-all">
+                <span className="text-white opacity-0 hover:opacity-100">Cambiar</span>
+              </div>
+            </div>
+          ) : (
+            <span className="text-gray-500">Utilizar mi logo</span>
+          )}
+          <input type="file" ref={logoInputRef} className="hidden" accept="image/*" onChange={handleLogoUpload} />
         </div>
         <div className="flex-1 px-8 my-4 md:my-0">
           <div className="text-center">
@@ -520,7 +614,7 @@ export default function NuevaFacturaPage() {
         <div className="w-64 space-y-2">
           <div className="flex justify-between">
             <span>Subtotal</span>
-            <span>{formatCurrency(subtotal)}</span>
+            <span>{formatCurrency(subtotal + descuento)}</span>
           </div>
           <div className="flex justify-between">
             <span>Descuento</span>
@@ -539,8 +633,27 @@ export default function NuevaFacturaPage() {
 
       {/* Signature and Terms */}
       <motion.div variants={itemVariants} className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-6">
-        <div className="border-2 border-dashed border-gray-300 h-32 flex items-center justify-center rounded-lg cursor-pointer hover:bg-gray-50 transition-colors">
-          <span className="text-gray-500">Utilizar mi firma</span>
+        <div
+          className="border-2 border-dashed border-gray-300 h-32 flex items-center justify-center rounded-lg cursor-pointer hover:bg-gray-50 transition-colors relative overflow-hidden"
+          onClick={() => signatureInputRef.current.click()}
+        >
+          {signaturePreview ? (
+            <div className="relative w-full h-full">
+              <Image src={signaturePreview || "/placeholder.svg"} alt="Firma" fill style={{ objectFit: "contain" }} />
+              <div className="absolute inset-0 bg-black bg-opacity-0 hover:bg-opacity-20 flex items-center justify-center transition-all">
+                <span className="text-white opacity-0 hover:opacity-100">Cambiar</span>
+              </div>
+            </div>
+          ) : (
+            <span className="text-gray-500">Utilizar mi firma</span>
+          )}
+          <input
+            type="file"
+            ref={signatureInputRef}
+            className="hidden"
+            accept="image/*"
+            onChange={handleSignatureUpload}
+          />
         </div>
         <div className="space-y-2">
           <h3 className="font-semibold">Términos y condiciones</h3>
@@ -564,7 +677,7 @@ export default function NuevaFacturaPage() {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
-              <PlusCircle className="w-4 h-4" />
+              <PlusCircle className="w-4 w-4" />
               Agregar pago
             </motion.button>
           </DialogTrigger>
@@ -626,5 +739,4 @@ export default function NuevaFacturaPage() {
     </motion.div>
   )
 }
-
 

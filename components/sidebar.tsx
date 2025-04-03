@@ -4,6 +4,8 @@ import { usePathname } from "next/navigation"
 import Link from "next/link"
 import type { ReactNode } from "react"
 
+
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
 export function Sidebar() {
   const pathname = usePathname()
   const module = pathname.split("/")[1] || "dashboard"
@@ -12,10 +14,10 @@ export function Sidebar() {
   const sidebarIcons = {
     dashboard: [
       { icon: <HomeIcon />, path: "/" },
-      { icon: <CalendarIcon />, path: "/agenda" },
+      /*{ icon: <CalendarIcon />, path: "/agenda" },
       { icon: <UsersIcon />, path: "/clientes" },
       { icon: <SettingsIcon />, path: "/configuracion" },
-      { icon: <HelpCircleIcon />, path: "/ayuda" },
+      { icon: <HelpCircleIcon />, path: "/ayuda" },*/
     ],
     agenda: [
       { icon: <HomeIcon />, path: "/" },
@@ -27,11 +29,12 @@ export function Sidebar() {
     ],
     configuracion: [
       { icon: <HomeIcon />, path: "/" },
-      { icon: <UserIcon />, path: "/configuracion/perfil" },
+      /*{ icon: <UserIcon />, path: "/configuracion/perfil" },*/
       { icon: <SettingsIcon />, path: "/configuracion", active: true },
-      { icon: <DatabaseIcon />, path: "/configuracion/datos" },
-      { icon: <BellIcon />, path: "/configuracion/notificaciones" },
+      { icon: <KeyIcon />, path: "/configuracion/permisos" },
+      { icon: <UsersIcon />, path: "/configuracion/usuarios" },
       { icon: <ShieldIcon />, path: "/configuracion/seguridad" },
+      { icon: <ActivityIcon />, path: "/configuracion/auditoria" },
     ],
     facturacion: [
       { icon: <HomeIcon />, path: "/" },
@@ -48,7 +51,7 @@ export function Sidebar() {
       { icon: <PackageIcon />, path: "/inventarios", active: true },
       { icon: <ShoppingCartIcon />, path: "/inventarios/compras" },
       { icon: <TruckIcon />, path: "/inventarios/proveedores" },
-      { icon: <AlertCircleIcon />, path: "/inventarios/alertas" },
+      { icon: <AlertCircleIcon />, path: "/inventarios/almacenes" },
       { icon: <SettingsIcon />, path: "/inventarios/configuracion" },
     ],
     reportes: [
@@ -89,7 +92,7 @@ export function Sidebar() {
       { icon: <UsersIcon />, path: "/seguridad/usuarios" },
       { icon: <KeyIcon />, path: "/seguridad/permisos" },
       { icon: <ActivityIcon />, path: "/seguridad/auditoria" },
-      { icon: <SettingsIcon />, path: "/seguridad/configuracion" },
+      /*{ icon: <SettingsIcon />, path: "/seguridad/configuracion" },*/
     ],
     login: [
       { icon: <HomeIcon />, path: "/" },
@@ -101,6 +104,11 @@ export function Sidebar() {
   // Usar los iconos del módulo actual o los predeterminados si no hay coincidencia
   const currentIcons = sidebarIcons[module as keyof typeof sidebarIcons] || sidebarIcons.dashboard
 
+  // Verificar si una ruta está activa
+  const isActive = (path: string) => {
+    return pathname === path || pathname.startsWith(`${path}/`)
+  }
+
   return (
     <div className="w-16 bg-white border-r flex flex-col items-center py-4">
       <div className="mb-8">
@@ -111,10 +119,29 @@ export function Sidebar() {
       <nav className="flex flex-col items-center space-y-6 flex-1">
         {currentIcons.map((item, index) => (
           <Link href={item.path} key={index}>
-            <SidebarIcon icon={item.icon} active={item.active} />
+            <SidebarIcon icon={item.icon} active={item.active || isActive(item.path)} />
           </Link>
         ))}
       </nav>
+      <div className="mt-auto">
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <button
+                className="w-10 h-10 rounded-full flex items-center justify-center text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800"
+                onClick={() => {
+                  document.documentElement.classList.toggle("dark")
+                }}
+              >
+                <MoonIcon />
+              </button>
+            </TooltipTrigger>
+            <TooltipContent side="right">
+              <p>Cambiar tema</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+      </div>
     </div>
   )
 }
@@ -763,3 +790,20 @@ function RefreshCcwIcon() {
   )
 }
 
+function MoonIcon() {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="18"
+      height="18"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+    </svg>
+  )
+}

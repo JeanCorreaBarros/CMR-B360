@@ -336,7 +336,7 @@ export default function AgendaPage() {
 
   // Función para abrir la configuración
   const openConfigPage = () => {
-    router.push("/agenda/config")
+    router.push("/agenda/configuracion")
   }
 
   // Función para manejar el clic en un espacio de tiempo
@@ -662,7 +662,11 @@ export default function AgendaPage() {
 
   return (
     <div className="flex h-screen bg-gray-50">
-       <main className="flex-1 overflow-y-auto ">
+
+      <Sidebar />
+      <div className="flex flex-col flex-1 overflow-hidden">
+        <Header />
+        <main className="flex-1 overflow-y-auto p-9">
           <div className="flex items-center justify-between mb-6">
             <h1 className="text-2xl font-bold">Agenda y Citas</h1>
             <div className="flex gap-2">
@@ -861,6 +865,8 @@ export default function AgendaPage() {
             </div>
           </div>
         </main>
+      </div>
+
 
       {/* Modal para crear nueva cita */}
       <Dialog open={isNewCitaOpen} onOpenChange={(open) => setIsNewCitaOpen(open)}>

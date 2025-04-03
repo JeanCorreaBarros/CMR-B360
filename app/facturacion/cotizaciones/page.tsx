@@ -102,10 +102,10 @@ function VisualizarCotizacionModal({ cotizacion }) {
                 <p>Válida hasta: 15/06/2023</p>
                 <p
                   className={`inline-block px-2 py-1 rounded-full text-xs ${cotizacion.estado === "Aprobada"
-                      ? "bg-green-100 text-green-800"
-                      : cotizacion.estado === "Pendiente"
-                        ? "bg-yellow-100 text-yellow-800"
-                        : "bg-red-100 text-red-800"
+                    ? "bg-green-100 text-green-800"
+                    : cotizacion.estado === "Pendiente"
+                      ? "bg-yellow-100 text-yellow-800"
+                      : "bg-red-100 text-red-800"
                     }`}
                 >
                   {cotizacion.estado}
@@ -223,186 +223,193 @@ export default function CotizacionesPage() {
 
   return (
     <div className="flex min-h-screen bg-gray-50">
-      <motion.main
-        className="flex-1 overflow-y-auto p-6"
-        initial="hidden"
-        animate="visible"
-        variants={containerVariants}
-      >
-        <motion.div className="flex items-center justify-between mb-6" variants={itemVariants}>
-          <h1 className="text-2xl font-bold">Cotizaciones</h1>
-          <Button
-            onClick={() => router.push("/facturacion/nueva-cotizacion")}
-            className="bg-black hover:bg-gray-800 text-white"
-          >
-            <PlusIcon className="mr-2 h-4 w-4" />
-            Nueva Cotización
-          </Button>
-        </motion.div>
 
-        <motion.div className="bg-white rounded-xl p-6 shadow-sm mb-6" variants={itemVariants}>
-          <div className="flex justify-between items-center mb-4">
-            <div className="flex gap-2">
-              <Button
-                variant={filtro === "Todos" ? "default" : "outline"}
-                onClick={() => {
-                  setFiltro("Todos")
-                  setCurrentPage(1)
-                }}
-                className={filtro === "Todos" ? "bg-black hover:bg-gray-800" : ""}
-              >
-                Todas
-              </Button>
-              <Button
-                variant={filtro === "Aprobada" ? "default" : "outline"}
-                onClick={() => {
-                  setFiltro("Aprobada")
-                  setCurrentPage(1)
-                }}
-                className={filtro === "Aprobada" ? "bg-green-600 hover:bg-green-700" : ""}
-              >
-                Aprobadas
-              </Button>
-              <Button
-                variant={filtro === "Pendiente" ? "default" : "outline"}
-                onClick={() => {
-                  setFiltro("Pendiente")
-                  setCurrentPage(1)
-                }}
-                className={filtro === "Pendiente" ? "bg-yellow-600 hover:bg-yellow-700" : ""}
-              >
-                Pendientes
-              </Button>
-              <Button
-                variant={filtro === "Rechazada" ? "default" : "outline"}
-                onClick={() => {
-                  setFiltro("Rechazada")
-                  setCurrentPage(1)
-                }}
-                className={filtro === "Rechazada" ? "bg-red-600 hover:bg-red-700" : ""}
-              >
-                Rechazadas
-              </Button>
-            </div>
-            <div className="flex gap-2">
-              <div className="relative">
-                <input
-                  type="text"
-                  placeholder="Buscar cotización..."
-                  className="pl-8 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-black"
-                />
-                <SearchIcon className="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+      <Sidebar />
+      <div className="flex flex-col flex-1 overflow-hidden">
+        <Header />
+        <motion.main
+          className="flex-1 overflow-y-auto p-9"
+          initial="hidden"
+          animate="visible"
+          variants={containerVariants}
+        >
+          <motion.div className="flex items-center justify-between mb-6" variants={itemVariants}>
+            <h1 className="text-2xl font-bold">Cotizaciones</h1>
+            <Button
+              onClick={() => router.push("/facturacion/nueva-cotizacion")}
+              className="bg-black hover:bg-gray-800 text-white"
+            >
+              <PlusIcon className="mr-2 h-4 w-4" />
+              Nueva Cotización
+            </Button>
+          </motion.div>
+
+          <motion.div className="bg-white rounded-xl p-6 shadow-sm mb-6" variants={itemVariants}>
+            <div className="flex justify-between items-center mb-4">
+              <div className="flex gap-2">
+                <Button
+                  variant={filtro === "Todos" ? "default" : "outline"}
+                  onClick={() => {
+                    setFiltro("Todos")
+                    setCurrentPage(1)
+                  }}
+                  className={filtro === "Todos" ? "bg-black hover:bg-gray-800" : ""}
+                >
+                  Todas
+                </Button>
+                <Button
+                  variant={filtro === "Aprobada" ? "default" : "outline"}
+                  onClick={() => {
+                    setFiltro("Aprobada")
+                    setCurrentPage(1)
+                  }}
+                  className={filtro === "Aprobada" ? "bg-green-600 hover:bg-green-700" : ""}
+                >
+                  Aprobadas
+                </Button>
+                <Button
+                  variant={filtro === "Pendiente" ? "default" : "outline"}
+                  onClick={() => {
+                    setFiltro("Pendiente")
+                    setCurrentPage(1)
+                  }}
+                  className={filtro === "Pendiente" ? "bg-yellow-600 hover:bg-yellow-700" : ""}
+                >
+                  Pendientes
+                </Button>
+                <Button
+                  variant={filtro === "Rechazada" ? "default" : "outline"}
+                  onClick={() => {
+                    setFiltro("Rechazada")
+                    setCurrentPage(1)
+                  }}
+                  className={filtro === "Rechazada" ? "bg-red-600 hover:bg-red-700" : ""}
+                >
+                  Rechazadas
+                </Button>
+              </div>
+              <div className="flex gap-2">
+                <div className="relative">
+                  <input
+                    type="text"
+                    placeholder="Buscar cotización..."
+                    className="pl-8 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-black"
+                  />
+                  <SearchIcon className="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                </div>
               </div>
             </div>
-          </div>
 
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead>
-                <tr className="text-left text-sm text-gray-500 border-b">
-                  <th className="pb-3 font-medium">Nº Cotización</th>
-                  <th className="pb-3 font-medium">Cliente</th>
-                  <th className="pb-3 font-medium">Fecha</th>
-                  <th className="pb-3 font-medium">Monto</th>
-                  <th className="pb-3 font-medium">Estado</th>
-                  <th className="pb-3 font-medium">Acciones</th>
-                </tr>
-              </thead>
-              <tbody>
-                {currentItems.map((cotizacion) => (
-                  <motion.tr
-                    key={cotizacion.id}
-                    className="border-b hover:bg-gray-50"
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.3 }}
-                  >
-                    <td className="py-3">{cotizacion.id}</td>
-                    <td className="py-3">{cotizacion.cliente}</td>
-                    <td className="py-3">{cotizacion.fecha}</td>
-                    <td className="py-3">{cotizacion.monto}</td>
-                    <td className="py-3">
-                      <span
-                        className={`px-2 py-1 rounded-full text-xs ${cotizacion.estado === "Aprobada"
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead>
+                  <tr className="text-left text-sm text-gray-500 border-b">
+                    <th className="pb-3 font-medium">Nº Cotización</th>
+                    <th className="pb-3 font-medium">Cliente</th>
+                    <th className="pb-3 font-medium">Fecha</th>
+                    <th className="pb-3 font-medium">Monto</th>
+                    <th className="pb-3 font-medium">Estado</th>
+                    <th className="pb-3 font-medium">Acciones</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {currentItems.map((cotizacion) => (
+                    <motion.tr
+                      key={cotizacion.id}
+                      className="border-b hover:bg-gray-50"
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.3 }}
+                    >
+                      <td className="py-3">{cotizacion.id}</td>
+                      <td className="py-3">{cotizacion.cliente}</td>
+                      <td className="py-3">{cotizacion.fecha}</td>
+                      <td className="py-3">{cotizacion.monto}</td>
+                      <td className="py-3">
+                        <span
+                          className={`px-2 py-1 rounded-full text-xs ${cotizacion.estado === "Aprobada"
                             ? "bg-green-100 text-green-800"
                             : cotizacion.estado === "Pendiente"
                               ? "bg-yellow-100 text-yellow-800"
                               : "bg-red-100 text-red-800"
-                          }`}
-                      >
-                        {cotizacion.estado}
-                      </span>
-                    </td>
-                    <td className="py-3">
-                      <div className="flex gap-2">
-                        <VisualizarCotizacionModal cotizacion={cotizacion} />
-                        <button
-                          className="p-1 text-gray-500 hover:text-gray-700"
-                          onClick={() => router.push(`/facturacion/editar-cotizacion/${cotizacion.id}`)}
+                            }`}
                         >
-                          <EditIcon className="w-4 h-4" />
-                        </button>
-                        <button className="p-1 text-gray-500 hover:text-gray-700">
-                          <DownloadIcon className="w-4 h-4" />
-                        </button>
-                        <button className="p-1 text-gray-500 hover:text-gray-700">
-                          <TrashIcon className="w-4 h-4" />
-                        </button>
-                      </div>
-                    </td>
-                  </motion.tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-
-          <div className="flex justify-between items-center mt-4">
-            <div className="text-sm text-gray-500">
-              Mostrando {indexOfFirstItem + 1} a {Math.min(indexOfLastItem, cotizacionesFiltradas.length)} de{" "}
-              {cotizacionesFiltradas.length} cotizaciones
+                          {cotizacion.estado}
+                        </span>
+                      </td>
+                      <td className="py-3">
+                        <div className="flex gap-2">
+                          <VisualizarCotizacionModal cotizacion={cotizacion} />
+                          <button
+                            className="p-1 text-gray-500 hover:text-gray-700"
+                            onClick={() => router.push(`/facturacion/editar-cotizacion/${cotizacion.id}`)}
+                          >
+                            <EditIcon className="w-4 h-4" />
+                          </button>
+                          <button className="p-1 text-gray-500 hover:text-gray-700">
+                            <DownloadIcon className="w-4 h-4" />
+                          </button>
+                          <button className="p-1 text-gray-500 hover:text-gray-700">
+                            <TrashIcon className="w-4 h-4" />
+                          </button>
+                        </div>
+                      </td>
+                    </motion.tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
-            <div className="flex gap-2">
-              <button
-                className={`px-3 py-1 border border-gray-300 rounded-md ${currentPage === 1 ? "opacity-50 cursor-not-allowed" : "hover:bg-gray-50"}`}
-                onClick={() => currentPage > 1 && paginate(currentPage - 1)}
-                disabled={currentPage === 1}
-              >
-                <ChevronLeftIcon className="h-4 w-4" />
-              </button>
 
-              {Array.from({ length: Math.min(totalPages, 5) }, (_, i) => {
-                let pageNum = i + 1
-                if (totalPages > 5) {
-                  if (currentPage > 3) {
-                    pageNum = i + currentPage - 2
-                    if (currentPage > totalPages - 2) {
-                      pageNum = totalPages - 4 + i
+            <div className="flex justify-between items-center mt-4">
+              <div className="text-sm text-gray-500">
+                Mostrando {indexOfFirstItem + 1} a {Math.min(indexOfLastItem, cotizacionesFiltradas.length)} de{" "}
+                {cotizacionesFiltradas.length} cotizaciones
+              </div>
+              <div className="flex gap-2">
+                <button
+                  className={`px-3 py-1 border border-gray-300 rounded-md ${currentPage === 1 ? "opacity-50 cursor-not-allowed" : "hover:bg-gray-50"}`}
+                  onClick={() => currentPage > 1 && paginate(currentPage - 1)}
+                  disabled={currentPage === 1}
+                >
+                  <ChevronLeftIcon className="h-4 w-4" />
+                </button>
+
+                {Array.from({ length: Math.min(totalPages, 5) }, (_, i) => {
+                  let pageNum = i + 1
+                  if (totalPages > 5) {
+                    if (currentPage > 3) {
+                      pageNum = i + currentPage - 2
+                      if (currentPage > totalPages - 2) {
+                        pageNum = totalPages - 4 + i
+                      }
                     }
                   }
-                }
-                return (
-                  <button
-                    key={pageNum}
-                    onClick={() => paginate(pageNum)}
-                    className={`px-3 py-1 ${currentPage === pageNum ? "bg-black text-white" : "border border-gray-300 hover:bg-gray-50"
-                      } rounded-md`}
-                  >
-                    {pageNum}
-                  </button>
-                )
-              })}
+                  return (
+                    <button
+                      key={pageNum}
+                      onClick={() => paginate(pageNum)}
+                      className={`px-3 py-1 ${currentPage === pageNum ? "bg-black text-white" : "border border-gray-300 hover:bg-gray-50"
+                        } rounded-md`}
+                    >
+                      {pageNum}
+                    </button>
+                  )
+                })}
 
-              <button
-                className={`px-3 py-1 border border-gray-300 rounded-md ${currentPage === totalPages ? "opacity-50 cursor-not-allowed" : "hover:bg-gray-50"}`}
-                onClick={() => currentPage < totalPages && paginate(currentPage + 1)}
-                disabled={currentPage === totalPages}
-              >
-                <ChevronRightIcon className="h-4 w-4" />
-              </button>
+                <button
+                  className={`px-3 py-1 border border-gray-300 rounded-md ${currentPage === totalPages ? "opacity-50 cursor-not-allowed" : "hover:bg-gray-50"}`}
+                  onClick={() => currentPage < totalPages && paginate(currentPage + 1)}
+                  disabled={currentPage === totalPages}
+                >
+                  <ChevronRightIcon className="h-4 w-4" />
+                </button>
+              </div>
             </div>
-          </div>
-        </motion.div>
-      </motion.main>
+          </motion.div>
+        </motion.main>
+      </div>
+
+
     </div>
   )
 }
